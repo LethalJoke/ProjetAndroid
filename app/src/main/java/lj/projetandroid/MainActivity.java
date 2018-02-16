@@ -128,6 +128,10 @@ public class MainActivity extends AppCompatActivity
                         MY_PERMISSIONS_REQUEST_READ_STORAGE);
             }
         }
+        else
+        {
+            canRead = true;
+        }
     }
 
     @Override
