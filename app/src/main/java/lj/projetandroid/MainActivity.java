@@ -26,14 +26,6 @@ import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-   /* private static int RESULT_LOAD_IMG = 1;
-    public void loadImagefromGallery(View view) {
-        // Create intent to Open Image applications like Gallery, Google Photos
-        Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        // Start the Intent
-        startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
-    }*/
 
    private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
    private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
@@ -117,10 +109,8 @@ public class MainActivity extends AppCompatActivity
         {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                //Cela signifie que la permission à déjà était
-                //demandé et l'utilisateur l'a refusé
-                //Vous pouvez aussi expliquer à l'utilisateur pourquoi
-                //cette permission est nécessaire et la redemander
+                //Cela signifie que la permission à déjà été demandée et l'utilisateur l'a refusé
+                //On peut aussi expliquer à l'utilisateur pourquoi cette permission est nécessaire et la redemander
             } else {
                 //Sinon demander la permission
                 ActivityCompat.requestPermissions(this,
