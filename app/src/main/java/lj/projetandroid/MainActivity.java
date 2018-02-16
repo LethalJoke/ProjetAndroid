@@ -57,23 +57,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void selectPicture(View v) {
-        if(ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)  != PackageManager.PERMISSION_GRANTED)
-        {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                //Cela signifie que la permission à déjà était
-                //demandé et l'utilisateur l'a refusé
-                //Vous pouvez aussi expliquer à l'utilisateur pourquoi
-                //cette permission est nécessaire et la redemander
-            } else {
-                //Sinon demander la permission
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_STORAGE);
-            }
-        }
-
         if(!canRead)
             return;
 
@@ -128,6 +111,23 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)  != PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                //Cela signifie que la permission à déjà était
+                //demandé et l'utilisateur l'a refusé
+                //Vous pouvez aussi expliquer à l'utilisateur pourquoi
+                //cette permission est nécessaire et la redemander
+            } else {
+                //Sinon demander la permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_STORAGE);
+            }
+        }
     }
 
     @Override
