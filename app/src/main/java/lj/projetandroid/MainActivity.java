@@ -1,6 +1,8 @@
 package lj.projetandroid;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,9 +10,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,8 +21,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,10 +35,48 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(galleryIntent, RESULT_LOAD_IMG);
     }*/
 
+   private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
+   private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
+   private boolean canRead = false;
 
-    private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[],
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    canRead = true;
+                } else {
+                    canRead = false;
+                }
+                return;
+            }
+        }
+    }
 
     public void selectPicture(View v) {
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)  != PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                //Cela signifie que la permission à déjà était
+                //demandé et l'utilisateur l'a refusé
+                //Vous pouvez aussi expliquer à l'utilisateur pourquoi
+                //cette permission est nécessaire et la redemander
+            } else {
+                //Sinon demander la permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_STORAGE);
+            }
+        }
+
+        if(!canRead)
+            return;
+
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, SELECT_PICTURE_ACTIVITY_REQUEST_CODE);
@@ -43,7 +84,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-
         switch (requestCode) {
             case SELECT_PICTURE_ACTIVITY_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
