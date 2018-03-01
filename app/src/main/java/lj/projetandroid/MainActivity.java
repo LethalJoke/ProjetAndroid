@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,10 +20,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,6 +35,14 @@ public class MainActivity extends AppCompatActivity
    private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
    private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
    private boolean canRead = false;
+   private Bitmap originalOne;
+
+   /*Modes liés à la seekbar
+   0 -> Aucun
+   1 -> Luminosité
+   2 -> Contraste
+    */
+   private int seekBarMode = 0;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -68,8 +81,8 @@ public class MainActivity extends AppCompatActivity
                     if (cursor.moveToFirst()) {
                         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                         String filePath = cursor.getString(columnIndex);
-                        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-                        ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(bitmap);
+                        originalOne = BitmapFactory.decodeFile(filePath);
+                        ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(originalOne);
                     }
                     cursor.close();
                 }
@@ -77,6 +90,22 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void validateSeekbar(View v){
+        if(seekBarMode == 1)
+        {
+            //Lumino
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            int value = ((SeekBar) findViewById(R.id.seekbar)).getProgress() - 256;
+            iv.setImageBitmap(BitmapModifier.changeLuminosity(bmp, value));
+        }
+        else
+        {
+            //Contraste
+        }
+        ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
+        ((SeekBar)findViewById(R.id.seekbar)).setProgress(256);
+    }
 
 
     @Override
@@ -86,14 +115,14 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
+        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -141,7 +170,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    @Override
+    /*@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -154,27 +183,29 @@ public class MainActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        seekBarMode = 0;
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        if (id == R.id.lumino) {
+            seekBarMode = 1;
+        } else if (id == R.id.contra) {
+            seekBarMode = 2;
+        } else if (id == R.id.histo) {
 
         }
+        if(seekBarMode != 0)
+        {
+            ((SeekBar)findViewById(R.id.seekbar)).setProgress(256);
+            ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.VISIBLE);
+        }
+        else
+            ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
