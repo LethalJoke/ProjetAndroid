@@ -91,25 +91,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void validateSeekbar(View v){
+        ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+        Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+        SeekBar sk = ((SeekBar) findViewById(R.id.seekbar));
         if(seekBarMode == 1)
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            SeekBar sk = ((SeekBar) findViewById(R.id.seekbar));
+
             int value = sk.getProgress() - sk.getMax() / 2;
             iv.setImageBitmap(BitmapModifier.changeLuminosity(bmp, value));
-            sk.setProgress(sk.getMax() / 2);
         }
         else
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            SeekBar sk = ((SeekBar) findViewById(R.id.seekbar));
             double value = 2.0 * sk.getProgress() / sk.getMax();
             iv.setImageBitmap(BitmapModifier.changeContraste(bmp, value));
-            sk.setProgress(sk.getMax() / 2);
+
         }
         ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
+        sk.setProgress(sk.getMax() / 2);
     }
 
 
