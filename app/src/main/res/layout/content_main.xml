@@ -55,8 +55,8 @@
             android:id="@+id/seekbar"
             android:layout_width="200dp"
             android:layout_height="20dp"
-            android:max="512"
-            android:progress="256" />
+            android:max="254"
+            android:progress="127" />
 
         <Button
             android:id="@+id/ok_seekbar"

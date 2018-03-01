@@ -93,18 +93,23 @@ public class MainActivity extends AppCompatActivity
     public void validateSeekbar(View v){
         if(seekBarMode == 1)
         {
-            //Lumino
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            int value = ((SeekBar) findViewById(R.id.seekbar)).getProgress() - 256;
+            SeekBar sk = ((SeekBar) findViewById(R.id.seekbar));
+            int value = sk.getProgress() - sk.getMax() / 2;
             iv.setImageBitmap(BitmapModifier.changeLuminosity(bmp, value));
+            sk.setProgress(sk.getMax() / 2);
         }
         else
         {
-            //Contraste
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            SeekBar sk = ((SeekBar) findViewById(R.id.seekbar));
+            double value = 2.0 * sk.getProgress() / sk.getMax();
+            iv.setImageBitmap(BitmapModifier.changeContraste(bmp, value));
+            sk.setProgress(sk.getMax() / 2);
         }
         ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
-        ((SeekBar)findViewById(R.id.seekbar)).setProgress(256);
     }
 
 
@@ -201,7 +206,6 @@ public class MainActivity extends AppCompatActivity
         }
         if(seekBarMode != 0)
         {
-            ((SeekBar)findViewById(R.id.seekbar)).setProgress(256);
             ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.VISIBLE);
         }
         else
