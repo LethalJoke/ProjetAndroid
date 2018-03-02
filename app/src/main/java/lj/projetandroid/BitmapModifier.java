@@ -93,9 +93,10 @@ public abstract class BitmapModifier {
             int newred, newblue, newgreen;
             if(mode == 0)
             {
-                newred = (int)(0.299 * red);
-                newblue = (int)(0.114 * blue);
-                newgreen = (int)(0.587 * green);
+                int grey = (int)((0.299 * red) + (0.114 * blue) + (0.587 * green));
+                newred = grey;
+                newblue = grey;
+                newgreen = grey;
 
             }
             else
