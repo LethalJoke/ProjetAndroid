@@ -1,18 +1,19 @@
 package lj.projetandroid;
 
 import android.Manifest;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -20,24 +21,30 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
-
-    private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
-    private boolean canRead = false;
-
-    private Bitmap originalOne;
+   private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_STORAGE = 1;
+   private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
+   private boolean canRead = false;
+    private boolean canWrite = false;
+   private Bitmap originalOne;
 
    /*Modes liés à la seekbar
    0 -> Aucun
@@ -60,8 +67,47 @@ public class MainActivity extends AppCompatActivity
                 }
                 return;
             }
+            case MY_PERMISSIONS_REQUEST_WRITE_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    canWrite = true;
+                } else {
+                    canWrite = false;
+                }
+                return;
+            }
         }
     }
+
+
+        public void saveImg(View v) {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            BitmapDrawable draw = (BitmapDrawable) iv.getDrawable();
+            Bitmap bitmap = draw.getBitmap();
+
+            FileOutputStream outStream = null;
+            File sdCard = Environment.getExternalStorageDirectory();
+            File dir = new File(sdCard.getAbsolutePath() + "/ModifiedImages");
+            dir.mkdirs();
+            String fileName = String.format("%d.jpg", System.currentTimeMillis());
+            File outFile = new File(dir, fileName);
+            try {
+                outStream = new FileOutputStream(outFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+            try {
+                outStream.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                outStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     public void selectPicture(View v) {
         if(!canRead)
@@ -155,6 +201,24 @@ public class MainActivity extends AppCompatActivity
         else
         {
             canRead = true;
+        }
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)  != PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                //Cela signifie que la permission à déjà été demandée et l'utilisateur l'a refusé
+                //On peut aussi expliquer à l'utilisateur pourquoi cette permission est nécessaire et la redemander
+            } else {
+                //Sinon demander la permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_WRITE_STORAGE);
+            }
+        }
+        else
+        {
+            canWrite = true;
         }
     }
 
