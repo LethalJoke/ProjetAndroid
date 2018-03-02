@@ -199,8 +199,10 @@ public class MainActivity extends AppCompatActivity
             seekBarMode = 1;
         } else if (id == R.id.contra) {
             seekBarMode = 2;
-        } else if (id == R.id.histo) {
-
+        } else if (id == R.id.gris) {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            iv.setImageBitmap(BitmapModifier.changeGris(bmp));
         }
         if(seekBarMode != 0)
         {

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="Basic Functions">
+    <item android:title="Fonctions basiques">
         <menu>
             <item
                 android:id="@+id/lumino"
@@ -12,11 +12,11 @@
                 android:id="@+id/contra"
                 android:title="Contraste" />
             <item
-                android:id="@+id/histo"
-                android:title="Egalisation d'histogramme" />
+                android:id="@+id/gris"
+                android:title="Niveau de Gris" />
             <item
                 android:id="@+id/nav_manage"
-                android:title="Tools" />
+                android:title="Tools" />s
         </menu>
     </item>
 
