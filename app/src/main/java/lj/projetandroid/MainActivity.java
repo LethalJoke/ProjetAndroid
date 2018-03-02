@@ -32,17 +32,19 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-   private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
-   private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
-   private boolean canRead = false;
-   private Bitmap originalOne;
+    private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
+
+    private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
+    private boolean canRead = false;
+
+    private Bitmap originalOne;
 
    /*Modes liés à la seekbar
    0 -> Aucun
    1 -> Luminosité
    2 -> Contraste
     */
-   private int seekBarMode = 0;
+    private int seekBarMode = 0;
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -202,8 +204,20 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.gris) {
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            iv.setImageBitmap(BitmapModifier.changeGris(bmp));
+            iv.setImageBitmap(BitmapModifier.changeTeinte(bmp, 0));
         }
+        else if(id == R.id.sepia){
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            iv.setImageBitmap(BitmapModifier.changeTeinte(bmp, 1));
+        }
+        else if(id == R.id.histo)
+        {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            iv.setImageBitmap(BitmapModifier.egalisationHistogramme(bmp));
+        }
+
         if(seekBarMode != 0)
         {
             ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.VISIBLE);

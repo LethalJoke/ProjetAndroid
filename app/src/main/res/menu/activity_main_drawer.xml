@@ -13,10 +13,13 @@
                 android:title="Contraste" />
             <item
                 android:id="@+id/gris"
-                android:title="Niveau de Gris" />
+                android:title="Niveaux de Gris" />
             <item
-                android:id="@+id/nav_manage"
-                android:title="Tools" />s
+                android:id="@+id/sepia"
+                android:title="Teinte Sepia" />
+            <item
+                android:id="@+id/histo"
+                android:title="Egalisation de l'histogramme" />
         </menu>
     </item>
 

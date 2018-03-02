@@ -6,6 +6,10 @@ package lj.projetandroid;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+
 public abstract class BitmapModifier {
 
     public static Bitmap changeLuminosity(Bitmap bmp, int value)
@@ -70,7 +74,9 @@ public abstract class BitmapModifier {
         return bmpResult;
     }
 
-    public static Bitmap changeGris(Bitmap bmp)
+    //Mode : 0-> Grey
+    // 1-> Sepia
+    public static Bitmap changeTeinte(Bitmap bmp, int mode)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -84,10 +90,77 @@ public abstract class BitmapModifier {
             int green = Color.green(p);
             int blue = Color.blue(p);
             int alpha = Color.alpha(p);
-            int grey = (int)(0.299 * red + 0.114 * blue + 0.587 * green);
-            pixs[i] = Color.argb(alpha,grey,grey,grey);
+            int newred, newblue, newgreen;
+            if(mode == 0)
+            {
+                newred = (int)(0.299 * red);
+                newblue = (int)(0.114 * blue);
+                newgreen = (int)(0.587 * green);
+
+            }
+            else
+            {
+                newred = (int)((red * 0.393) + (green * 0.769) + (blue * 0.189));
+                newgreen = (int)((red * 0.349) + (green * 0.686) + (blue * 0.168));
+                newblue = (int)((red * 0.272) + (green * 0.534) + (blue * 0.131));
+            }
+            if(newred > 255)
+                newred = 255;
+            if(newblue > 255)
+                newblue = 255;
+            if(newgreen > 255)
+                newgreen = 255;
+            if(newred < 0)
+                newred = 0;
+            if(newblue < 0)
+                newblue = 0;
+            if(newgreen < 0)
+                newgreen = 0;
+            pixs[i] = Color.argb(alpha,newred,newgreen,newblue);
         }
         bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
+        return bmpResult;
+    }
+
+    public static Bitmap egalisationHistogramme(Bitmap bmp)
+    {
+        Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
+        int totalSize = bmpResult.getWidth() * bmpResult.getHeight();
+        int[] pixs = new int[totalSize];
+        float[][] pixsHSV = new float[3][totalSize];
+        bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
+        float[] pixHSV = new float[3];
+        TreeMap<Float, Integer> histo = new TreeMap();
+
+        for(int i = 0; i < totalSize; i++) {
+            Color.colorToHSV(pixs[i], pixHSV);
+            pixsHSV[0][i] = pixHSV[0]; //Hue
+            pixsHSV[1][i] = pixHSV[1]; //Saturation
+            pixsHSV[2][i] = pixHSV[2]; //Value
+
+            if(histo.containsKey(pixsHSV[0]))
+            {
+               histo.put(pixHSV[2],1);
+            }
+            else
+            {
+                histo.put(pixHSV[2], histo.get(pixHSV[2]) + 1);
+            }
+        }
+
+        //Histo cumulé
+        for(Map.Entry<Float,Integer> entry : histo.entrySet()) {
+            Float key = entry.getKey();
+            Integer value = entry.getValue();
+            Map.Entry<Float,Integer> before = histo.floorEntry(key);
+            if(before != null)
+            {
+                entry.setValue(value + before.getValue());
+            }
+        }
+
+
+
         return bmpResult;
     }
 
