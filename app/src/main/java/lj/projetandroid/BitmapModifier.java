@@ -97,7 +97,6 @@ public abstract class BitmapModifier {
                 newred = grey;
                 newblue = grey;
                 newgreen = grey;
-
             }
             else
             {
@@ -128,40 +127,34 @@ public abstract class BitmapModifier {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
         int totalSize = bmpResult.getWidth() * bmpResult.getHeight();
         int[] pixs = new int[totalSize];
-        float[][] pixsHSV = new float[3][totalSize];
+        float[][] pixsHSV = new float[totalSize][3];
         bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
         float[] pixHSV = new float[3];
-        TreeMap<Float, Integer> histo = new TreeMap();
+        int[] histo = new int[256];
+
+        for(int i = 0; i < 256; i++)
+            histo[i] = 0;
 
         for(int i = 0; i < totalSize; i++) {
             Color.colorToHSV(pixs[i], pixHSV);
-            pixsHSV[0][i] = pixHSV[0]; //Hue
-            pixsHSV[1][i] = pixHSV[1]; //Saturation
-            pixsHSV[2][i] = pixHSV[2]; //Value
+            pixsHSV[i][0] = pixHSV[0]; //Hue
+            pixsHSV[i][1] = pixHSV[1]; //Saturation
+            pixsHSV[i][2] = pixHSV[2]; //Value
 
-            if(histo.containsKey(pixsHSV[0]))
-            {
-               histo.put(pixHSV[2],1);
-            }
-            else
-            {
-                histo.put(pixHSV[2], histo.get(pixHSV[2]) + 1);
-            }
+            histo[(int)(pixHSV[2] * 255)] += 1;
         }
 
         //Histo cumulé
-        for(Map.Entry<Float,Integer> entry : histo.entrySet()) {
-            Float key = entry.getKey();
-            Integer value = entry.getValue();
-            Map.Entry<Float,Integer> before = histo.floorEntry(key);
-            if(before != null)
-            {
-                entry.setValue(value + before.getValue());
-            }
+        for(int i = 1; i < 256; i++)
+            histo[i] += histo[i-1];
+
+
+        for(int i = 0; i < totalSize; i++) {
+            pixsHSV[i][2] =  histo[(int)(pixHSV[2] * 255)] * 255 / totalSize;
+            pixs[i] = Color.HSVToColor(pixsHSV[i]);
         }
 
-
-
+        bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
         return bmpResult;
     }
 
