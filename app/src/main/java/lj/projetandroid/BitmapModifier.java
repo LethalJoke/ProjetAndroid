@@ -5,6 +5,7 @@ package lj.projetandroid;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -154,6 +155,39 @@ public abstract class BitmapModifier {
             pixs[i] = Color.HSVToColor(pixsHSV[i]);
         }
 
+        bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
+        return bmpResult;
+    }
+
+    public static Bitmap convolution(Bitmap bmp, float[][] matrice, int size) {
+        Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
+        int width = bmpResult.getWidth();
+        int height = bmpResult.getHeight();
+        int totalSize =  width * height;
+        int marge = size / 2;
+        int[] pixs = new int[totalSize];
+        bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
+        for(int i = marge * width + marge; i < totalSize - (marge * width + marge); i++)
+        {
+            if(i % width <= marge)
+                continue;
+            if(i % width > width - marge) //?
+                continue;
+            int pix;
+            int vRed = 0;
+            int vGreen = 0;
+            int vBlue = 0;
+            for(int j = 0; j < size; j++)
+                for(int k = 0; k < size; k++)
+                {
+                    //Traitement matrice
+                     pix = pixs[(i - (marge * width + marge)) + j*width + k];
+                     vRed +=(int)(Color.red(pix) * matrice[j][k]);
+                     vGreen +=(int)(Color.green(pix) * matrice[j][k]);
+                     vBlue +=(int)(Color.blue(pix) * matrice[j][k]);
+                }
+            pixs[i] = Color.argb(Color.alpha(pixs[i]), vRed, vGreen, vBlue);
+        }
         bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
         return bmpResult;
     }

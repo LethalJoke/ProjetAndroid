@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity
    private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
    private boolean canRead = false;
     private boolean canWrite = false;
-   private Bitmap originalOne;
+   private Bitmap originalOne = null;
 
    /*Modes liés à la seekbar
    0 -> Aucun
@@ -282,6 +282,42 @@ public class MainActivity extends AppCompatActivity
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             iv.setImageBitmap(BitmapModifier.egalisationHistogramme(bmp));
+        }
+        else if(id == R.id.Gaussien )
+        {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            final float[][] gauss = {{1.f/16, 1.f/8, 1.f/16},
+                    {1.f/8, 1.f/4, 1.f/8},
+                    {1.f/16, 1.f/8, 1.f/16}};
+            iv.setImageBitmap(BitmapModifier.convolution(bmp,gauss,3));
+        }
+        else if(id == R.id.moyen )
+        {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            final float[][] moyen = {{1.f/9, 1.f/9, 1.f/9},
+                    {1.f/9, 1.f/9, 1.f/9},
+                    {1.f/9, 1.f/9, 1.f/9}};
+            iv.setImageBitmap(BitmapModifier.convolution(bmp,moyen,3));
+        }
+        else if(id == R.id.Laplacien )
+        {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            final float[][] laplacian = {{0, 1, 0},
+                    {1, -4, 1},
+                    {0, 1, 0}};
+            iv.setImageBitmap(BitmapModifier.convolution(bmp,laplacian,3));
+        }
+        else if(id == R.id.Sobel )
+        {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            final float[][] laplacian = {{-1, -2, -1},
+                    {0, 0, 0},
+                    {1, 2, 1}};
+            iv.setImageBitmap(BitmapModifier.convolution(bmp,laplacian,3));
         }
 
         if(seekBarMode != 0)

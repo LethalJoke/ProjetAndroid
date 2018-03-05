@@ -23,14 +23,20 @@
         </menu>
     </item>
 
-    <item android:title="Advanced Functions">
+    <item android:title="Convolution">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:title="Share" />
+                android:id="@+id/moyen"
+                android:title="Filtre Moyenneur" />
             <item
-                android:id="@+id/nav_send"
-                android:title="Send" />
+                android:id="@+id/Gaussien"
+                android:title="Filtre Gaussien" />
+            <item
+                android:id="@+id/Sobel"
+                android:title="Filtre Sobel" />
+            <item
+                android:id="@+id/Laplacien"
+                android:title="Filtre Laplacien" />
         </menu>
     </item>
 
