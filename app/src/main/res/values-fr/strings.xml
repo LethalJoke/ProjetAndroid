@@ -7,14 +7,14 @@
     <string name="action_settings">Paramètres</string>
     <string name="filtre_moyenneur">Flou Moyennant</string>
     <string name="filtre_gaussien">Flou Gaussien</string>
-    <string name="contraste">Filtre Gaussien</string>
+    <string name="contraste">Contraste</string>
     <string name="luminosit">Luminosité</string>
     <string name="fonctions_basiques">Fonctions basiques</string>
     <string name="niveaux_de_gris">Niveaux de Gris</string>
     <string name="teinte_sepia">Teinte Sepia</string>
     <string name="egalisation_de_l_histogramme">Egalisation de l\'histogramme</string>
     <string name="filtre_sobel">Filtre Sobel</string>
-    <string name="filtre_laplacien">Filtre Sobel</string>
+    <string name="filtre_laplacien">Filtre Laplacien</string>
     <string name="r_initialiser">Réinitialiser</string>
     <string name="galerie">Galerie</string>
     <string name="save">Sauvegarder</string>
