@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+
+
         public void saveImg(View v) {
             //If null, do nothing
             if(originalOne == null)
@@ -126,6 +128,7 @@ public class MainActivity extends AppCompatActivity
         intent.setType("image/*");
         startActivityForResult(intent, SELECT_PICTURE_ACTIVITY_REQUEST_CODE);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
@@ -335,6 +338,11 @@ public class MainActivity extends AppCompatActivity
                     {0, 0, 0},
                     {1, 2, 1}};
             iv.setImageBitmap(BitmapModifier.convolution(bmp,laplacian,3));
+        }
+        else if(id == R.id.rotate)
+        {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            iv.setRotation(iv.getRotation() + 90);
         }
 
         if(seekBarMode != 0)

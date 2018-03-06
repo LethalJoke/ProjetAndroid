@@ -20,6 +20,10 @@
             <item
                 android:id="@+id/histo"
                 android:title="@string/egalisation_de_l_histogramme" />
+            <item
+                android:id="@+id/rotate"
+                android:title="@string/rotate"
+                />
         </menu>
     </item>
 
