@@ -5,6 +5,7 @@ package lj.projetandroid;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -192,4 +193,10 @@ public abstract class BitmapModifier {
         return bmpResult;
     }
 
+    public static Bitmap rotateBitmap(Bitmap bmp, float value)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(value);
+        return Bitmap.createBitmap(bmp , 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+    }
 }

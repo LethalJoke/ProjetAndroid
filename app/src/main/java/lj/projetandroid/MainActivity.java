@@ -342,7 +342,8 @@ public class MainActivity extends AppCompatActivity
         else if(id == R.id.rotate)
         {
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
-            iv.setRotation(iv.getRotation() + 90);
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            iv.setImageBitmap(BitmapModifier.rotateBitmap(bmp,90));
         }
 
         if(seekBarMode != 0)
