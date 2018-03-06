@@ -82,6 +82,10 @@ public class MainActivity extends AppCompatActivity
 
 
         public void saveImg(View v) {
+            //If null, do nothing
+            if(originalOne == null)
+                return;
+
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
             BitmapDrawable draw = (BitmapDrawable) iv.getDrawable();
             Bitmap bitmap = draw.getBitmap();
@@ -158,6 +162,11 @@ public class MainActivity extends AppCompatActivity
         }
         ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
         sk.setProgress(sk.getMax() / 2);
+    }
+
+    public void reinit(View v){
+        if(originalOne != null)
+            ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(originalOne);
     }
 
 
@@ -259,6 +268,11 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+
+        //If null, do nothing
+        if(originalOne == null)
+            return true;
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         seekBarMode = 0;
