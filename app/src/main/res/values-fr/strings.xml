@@ -6,7 +6,6 @@
     <string name="navigation_drawer_close">Fermer le tiroir de navigation</string>
     <string name="action_settings">Paramètres</string>
     <string name="filtre_moyenneur">Flou Moyennant</string>
-    <string name="filtre_gaussien">Flou Gaussien</string>
     <string name="contraste">Contraste</string>
     <string name="luminosit">Luminosité</string>
     <string name="fonctions_basiques">Fonctions basiques</string>
@@ -20,4 +19,7 @@
     <string name="save">Sauvegarder</string>
     <string name="convolution">Convolution</string>
     <string name="rotate">Rotation</string>
+    <string name="filtre_gaussien3">Flou Gaussien 3x3</string>
+    <string name="filtre_gaussien5">Flou Gaussien 5x5</string>
+    <string name="filtre_gaussien7">Flou Gaussien 7x7</string>
 </resources>

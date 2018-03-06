@@ -7,7 +7,9 @@
     <string name="action_settings">Settings</string>
     <string name="app_name">Image Processing - Android</string>
     <string name="filtre_moyenneur">Box Blur</string>
-    <string name="filtre_gaussien">Gaussian Blur</string>
+    <string name="filtre_gaussien3">Gaussian Blur 3x3</string>
+    <string name="filtre_gaussien5">Gaussian Blur 5x5</string>
+    <string name="filtre_gaussien7">Gaussian Blur 7x7</string>
     <string name="contraste">Contrast</string>
     <string name="luminosit">Luminosity</string>
     <string name="filtre_sobel">Sobel Matrix</string>

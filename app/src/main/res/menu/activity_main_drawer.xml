@@ -33,8 +33,14 @@
                 android:id="@+id/moyen"
                 android:title="@string/filtre_moyenneur" />
             <item
-                android:id="@+id/Gaussien"
-                android:title="@string/filtre_gaussien" />
+                android:id="@+id/Gaussien3"
+                android:title="@string/filtre_gaussien3" />
+            <item
+                android:id="@+id/Gaussien5"
+                android:title="@string/filtre_gaussien5" />
+            <item
+                android:id="@+id/Gaussien7"
+                android:title="@string/filtre_gaussien7" />
             <item
                 android:id="@+id/Sobel"
                 android:title="@string/filtre_sobel" />

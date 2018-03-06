@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             iv.setImageBitmap(BitmapModifier.egalisationHistogramme(bmp));
         }
-        else if(id == R.id.Gaussien )
+        else if(id == R.id.Gaussien3 )
         {
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
@@ -311,6 +311,30 @@ public class MainActivity extends AppCompatActivity
                     {1.f/8, 1.f/4, 1.f/8},
                     {1.f/16, 1.f/8, 1.f/16}};
             iv.setImageBitmap(BitmapModifier.convolution(bmp,gauss,3));
+        }
+        else if(id == R.id.Gaussien5 )
+        {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            final float[][] gauss = {{1.f/256, 4.f/256, 6.f/256, 4.f/256, 1.f/256},
+                    {4.f/256, 16.f/256, 24.f/256, 16.f/256, 4.f/256},
+                    {6.f/256, 24.f/256, 36.f/256, 24.f/256, 6.f/256},
+                    {4.f/256, 16.f/256, 24.f/256, 16.f/256, 4.f/256},
+                    {1.f/256, 4.f/256, 6.f/256, 4.f/256, 1.f/256}};
+            iv.setImageBitmap(BitmapModifier.convolution(bmp,gauss,5));
+        }
+        else if(id == R.id.Gaussien7 )
+        {
+            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
+            final float[][] gauss = {{0.000036f,	0.000363f,	0.001446f,	0.002291f,	0.001446f,	0.000363f,	0.000036f},
+                    {0.000363f,	0.003676f,	0.014662f,	0.023226f,	0.014662f,	0.003676f,	0.000363f},
+                    {0.001446f,	0.014662f,	0.058488f,	0.092651f,	0.058488f,	0.014662f,	0.001446f},
+                    {0.002291f,	0.023226f,	0.092651f,	0.146768f,	0.092651f,	0.023226f,	0.002291f},
+                    {0.001446f,	0.014662f,	0.058488f,	0.092651f,	0.058488f,	0.014662f,	0.001446f},
+                    {0.000363f,	0.003676f,	0.014662f,	0.023226f,	0.014662f,	0.003676f,	0.000363f},
+                    {0.000036f,	0.000363f,	0.001446f,	0.002291f,	0.001446f,	0.000363f,	0.000036f}};
+            iv.setImageBitmap(BitmapModifier.convolution(bmp,gauss,7));
         }
         else if(id == R.id.moyen )
         {
