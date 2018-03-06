@@ -1,14 +1,12 @@
 package lj.projetandroid;
 
 import android.Manifest;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,27 +22,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
    private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
-    private static final int MY_PERMISSIONS_REQUEST_WRITE_STORAGE = 1;
+   private static final int MY_PERMISSIONS_REQUEST_WRITE_STORAGE = 1;
+   private static final int MY_PERMISSIONS_REQUEST_CAMERA_ACCESS = 2;
    private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
+   private static final int TAKE_PHOTO_ACTIVITY_REQUEST_CODE = 1;
    private boolean canRead = false;
-    private boolean canWrite = false;
+   private boolean canWrite = false;
+   private boolean cameraAcces = false;
    private Bitmap originalOne = null;
 
    /*Modes liés à la seekbar
@@ -74,6 +72,15 @@ public class MainActivity extends AppCompatActivity
                     canWrite = true;
                 } else {
                     canWrite = false;
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_CAMERA_ACCESS: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    cameraAcces = true;
+                } else {
+                    cameraAcces = false;
                 }
                 return;
             }
@@ -128,7 +135,13 @@ public class MainActivity extends AppCompatActivity
         intent.setType("image/*");
         startActivityForResult(intent, SELECT_PICTURE_ACTIVITY_REQUEST_CODE);
     }
+    public void takePhoto(View v) {
+        if(!cameraAcces)
+            return;
 
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, TAKE_PHOTO_ACTIVITY_REQUEST_CODE);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
@@ -147,8 +160,40 @@ public class MainActivity extends AppCompatActivity
                     cursor.close();
                 }
                 break;
+            case TAKE_PHOTO_ACTIVITY_REQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    Bitmap bitmap = (Bitmap)imageReturnedIntent.getExtras().get("imageReturnedIntent");
+                    /*FileOutputStream outStream = null;
+                    File sdCard = Environment.getExternalStorageDirectory();
+                    File dir = new File(sdCard.getAbsolutePath() + "/ModifiedImages");
+                    dir.mkdirs();
+                    String fileName = String.format("%d.jpg", System.currentTimeMillis());
+                    File outFile = new File(dir, fileName);
+                    try {
+                        outStream = new FileOutputStream(outFile);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+                    Toast.makeText(this, "Image sauvegardée : " + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
+                    try {
+                        outStream.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        outStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+                    ((ImageView) findViewById(R.id.imageView2)).setImageBitmap(bitmap);
+                }
+
+
+            break;
         }
     }
+
 
     public void validateSeekbar(View v){
         ImageView iv = ((ImageView)findViewById(R.id.imageView2));
@@ -236,6 +281,24 @@ public class MainActivity extends AppCompatActivity
         else
         {
             canWrite = true;
+        }
+        if(ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA)  != PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.CAMERA)) {
+                //Cela signifie que la permission à déjà été demandée et l'utilisateur l'a refusé
+                //On peut aussi expliquer à l'utilisateur pourquoi cette permission est nécessaire et la redemander
+            } else {
+                //Sinon demander la permission
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.CAMERA},
+                        MY_PERMISSIONS_REQUEST_CAMERA_ACCESS);
+            }
+        }
+        else
+        {
+            cameraAcces = true;
         }
     }
 
