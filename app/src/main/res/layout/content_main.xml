@@ -31,7 +31,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:onClick="saveImg"
-        android:text="Save"
+        android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.971"
@@ -48,7 +48,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:onClick="selectPicture"
-        android:text="GALERIE"
+        android:text="@string/galerie"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.028"
@@ -79,7 +79,7 @@
             android:id="@+id/ok_seekbar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="OK"
+            android:text="@string/ok"
             android:onClick="validateSeekbar"/>
 
     </LinearLayout>
@@ -92,7 +92,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Réinitialiser"
+        android:text="@string/r_initialiser"
         android:onClick="reinit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/saveButton"

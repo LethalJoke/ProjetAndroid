@@ -3,40 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="Fonctions basiques">
+    <item android:title="@string/fonctions_basiques">
         <menu>
             <item
                 android:id="@+id/lumino"
-                android:title="Luminosité"/>
+                android:title="@string/luminosit"/>
             <item
                 android:id="@+id/contra"
-                android:title="Contraste" />
+                android:title="@string/contraste" />
             <item
                 android:id="@+id/gris"
-                android:title="Niveaux de Gris" />
+                android:title="@string/niveaux_de_gris" />
             <item
                 android:id="@+id/sepia"
-                android:title="Teinte Sepia" />
+                android:title="@string/teinte_sepia" />
             <item
                 android:id="@+id/histo"
-                android:title="Egalisation de l'histogramme" />
+                android:title="@string/egalisation_de_l_histogramme" />
         </menu>
     </item>
 
-    <item android:title="Convolution">
+    <item android:title="@string/convolution">
         <menu>
             <item
                 android:id="@+id/moyen"
-                android:title="Filtre Moyenneur" />
+                android:title="@string/filtre_moyenneur" />
             <item
                 android:id="@+id/Gaussien"
-                android:title="Filtre Gaussien" />
+                android:title="@string/filtre_gaussien" />
             <item
                 android:id="@+id/Sobel"
-                android:title="Filtre Sobel" />
+                android:title="@string/filtre_sobel" />
             <item
                 android:id="@+id/Laplacien"
-                android:title="Filtre Laplacien" />
+                android:title="@string/filtre_laplacien" />
         </menu>
     </item>
 

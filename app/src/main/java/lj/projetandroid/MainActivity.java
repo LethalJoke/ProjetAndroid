@@ -86,6 +86,9 @@ public class MainActivity extends AppCompatActivity
             if(originalOne == null)
                 return;
 
+            if(!canWrite)
+                return;
+
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
             BitmapDrawable draw = (BitmapDrawable) iv.getDrawable();
             Bitmap bitmap = draw.getBitmap();
