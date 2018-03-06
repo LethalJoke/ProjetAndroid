@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-            Toast.makeText(this, "Image sauvegardée : " + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.save_toast + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
             try {
                 outStream.flush();
             } catch (IOException e) {

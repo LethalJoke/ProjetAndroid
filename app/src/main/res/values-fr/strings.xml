@@ -22,4 +22,5 @@
     <string name="filtre_gaussien3">Flou Gaussien 3x3</string>
     <string name="filtre_gaussien5">Flou Gaussien 5x5</string>
     <string name="filtre_gaussien7">Flou Gaussien 7x7</string>
+    <string name="save_toast">"Image sauvegardée : "</string>
 </resources>
