@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity
         else
         {
             double value = 2.0 * sk.getProgress() / sk.getMax();
-            iv.setImageBitmap(BitmapModifier.changeContraste(bmp, value));
+            iv.setImageBitmap(BitmapModifier.changeContrast(bmp, value));
 
         }
         ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
@@ -290,18 +290,18 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.gris) {
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            iv.setImageBitmap(BitmapModifier.changeTeinte(bmp, 0));
+            iv.setImageBitmap(BitmapModifier.changeTint(bmp, 0));
         }
         else if(id == R.id.sepia){
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            iv.setImageBitmap(BitmapModifier.changeTeinte(bmp, 1));
+            iv.setImageBitmap(BitmapModifier.changeTint(bmp, 1));
         }
         else if(id == R.id.histo)
         {
             ImageView iv = ((ImageView)findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            iv.setImageBitmap(BitmapModifier.egalisationHistogramme(bmp));
+            iv.setImageBitmap(BitmapModifier.equalizeHisto(bmp));
         }
         else if(id == R.id.Gaussien3 )
         {

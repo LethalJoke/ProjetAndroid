@@ -45,7 +45,7 @@ public abstract class BitmapModifier {
         return bmpResult;
     }
 
-    public static Bitmap changeContraste(Bitmap bmp, double value)
+    public static Bitmap changeContrast(Bitmap bmp, double value)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
         int totalSize = bmpResult.getWidth() * bmpResult.getHeight();
@@ -78,7 +78,7 @@ public abstract class BitmapModifier {
 
     //Mode : 0-> Grey
     // 1-> Sepia
-    public static Bitmap changeTeinte(Bitmap bmp, int mode)
+    public static Bitmap changeTint(Bitmap bmp, int mode)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -124,7 +124,7 @@ public abstract class BitmapModifier {
         return bmpResult;
     }
 
-    public static Bitmap egalisationHistogramme(Bitmap bmp)
+    public static Bitmap equalizeHisto(Bitmap bmp)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
         int totalSize = bmpResult.getWidth() * bmpResult.getHeight();
