@@ -6,11 +6,6 @@ package lj.projetandroid;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
 
 public abstract class BitmapModifier {
 

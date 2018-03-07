@@ -2,8 +2,6 @@ package lj.projetandroid;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -35,7 +33,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
@@ -88,7 +85,6 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     cameraAcces = false;
                 }
-                return;
             }
         }
     }
@@ -101,7 +97,7 @@ public class MainActivity extends AppCompatActivity
             if(!canWrite)
                 return;
 
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             BitmapDrawable draw = (BitmapDrawable) iv.getDrawable();
             Bitmap bitmap = draw.getBitmap();
 
@@ -156,21 +152,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uriFilePath);
-        startActivityForResult(intent, 1);
-    }
-
-    private String getRealPathFromURI(Uri contentURI) {
-        String result;
-        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
-        if (cursor == null) {
-            result = contentURI.getPath();
-        } else {
-            cursor.moveToFirst();
-            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-            result = cursor.getString(idx);
-            cursor.close();
-        }
-        return result;
+        startActivityForResult(intent, TAKE_PHOTO_ACTIVITY_REQUEST_CODE);
     }
 
     @Override
@@ -207,9 +189,9 @@ public class MainActivity extends AppCompatActivity
 
 
     public void validateSeekbar(View v){
-        ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+        ImageView iv = (findViewById(R.id.imageView2));
         Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-        SeekBar sk = ((SeekBar) findViewById(R.id.seekbar));
+        SeekBar sk = ( findViewById(R.id.seekbar));
         if(seekBarMode == 1)
         {
 
@@ -222,7 +204,7 @@ public class MainActivity extends AppCompatActivity
             iv.setImageBitmap(BitmapModifier.changeContrast(bmp, value));
 
         }
-        ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
+        (findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
         sk.setProgress(sk.getMax() / 2);
     }
 
@@ -236,7 +218,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -248,13 +230,13 @@ public class MainActivity extends AppCompatActivity
             }
         });*/
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         if(ContextCompat.checkSelfPermission(this,
@@ -280,10 +262,7 @@ public class MainActivity extends AppCompatActivity
         {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                //Cela signifie que la permission à déjà été demandée et l'utilisateur l'a refusé
-                //On peut aussi expliquer à l'utilisateur pourquoi cette permission est nécessaire et la redemander
             } else {
-                //Sinon demander la permission
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         MY_PERMISSIONS_REQUEST_WRITE_STORAGE);
@@ -298,10 +277,7 @@ public class MainActivity extends AppCompatActivity
         {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.CAMERA)) {
-                //Cela signifie que la permission à déjà été demandée et l'utilisateur l'a refusé
-                //On peut aussi expliquer à l'utilisateur pourquoi cette permission est nécessaire et la redemander
             } else {
-                //Sinon demander la permission
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.CAMERA},
                         MY_PERMISSIONS_REQUEST_CAMERA_ACCESS);
@@ -315,7 +291,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer =  findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -379,24 +355,24 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.contra) {
             seekBarMode = 2;
         } else if (id == R.id.gris) {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             iv.setImageBitmap(BitmapModifier.changeTint(bmp, 0));
         }
         else if(id == R.id.sepia){
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             iv.setImageBitmap(BitmapModifier.changeTint(bmp, 1));
         }
         else if(id == R.id.histo)
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             iv.setImageBitmap(BitmapModifier.equalizeHisto(bmp));
         }
         else if(id == R.id.Gaussien3 )
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] gauss = {{1.f/16, 1.f/8, 1.f/16},
                     {1.f/8, 1.f/4, 1.f/8},
@@ -405,7 +381,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(id == R.id.Gaussien5 )
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] gauss = {{1.f/256, 4.f/256, 6.f/256, 4.f/256, 1.f/256},
                     {4.f/256, 16.f/256, 24.f/256, 16.f/256, 4.f/256},
@@ -416,7 +392,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(id == R.id.Gaussien7 )
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] gauss = {{0.000036f,	0.000363f,	0.001446f,	0.002291f,	0.001446f,	0.000363f,	0.000036f},
                     {0.000363f,	0.003676f,	0.014662f,	0.023226f,	0.014662f,	0.003676f,	0.000363f},
@@ -429,7 +405,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(id == R.id.moyen )
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] moyen = {{1.f/9, 1.f/9, 1.f/9},
                     {1.f/9, 1.f/9, 1.f/9},
@@ -438,7 +414,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(id == R.id.Laplacien )
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] laplacian = {{0, 1, 0},
                     {1, -4, 1},
@@ -447,7 +423,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(id == R.id.Sobel )
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] laplacian = {{-1, -2, -1},
                     {0, 0, 0},
@@ -456,19 +432,19 @@ public class MainActivity extends AppCompatActivity
         }
         else if(id == R.id.rotate)
         {
-            ImageView iv = ((ImageView)findViewById(R.id.imageView2));
+            ImageView iv = (findViewById(R.id.imageView2));
             Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             iv.setImageBitmap(BitmapModifier.rotateBitmap(bmp,90));
         }
 
         if(seekBarMode != 0)
         {
-            ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.VISIBLE);
+            (findViewById(R.id.layout_seekbar)).setVisibility(View.VISIBLE);
         }
         else
-            ((LinearLayout)findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
+            (findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
