@@ -21,14 +21,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity
    private boolean canWrite = false;
    private boolean cameraAcces = false;
    private Bitmap originalOne = null;
+   private Bitmap currentOne = null;
 
    /*Modes liés à la seekbar
    0 -> Aucun
@@ -89,17 +94,36 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+        public void refreshView()
+        {
+            String html="<html><body><img src='{IMAGE_PLACEHOLDER}' /></body></html>";
+
+            // Convert bitmap to Base64 encoded image for web
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            currentOne.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+            String imgageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
+            String image = "data:image/png;base64," + imgageBase64;
+
+            // Use image for the img src parameter in your html and load to webview
+            html = html.replace("{IMAGE_PLACEHOLDER}", image);
+            WebView wv = (WebView)findViewById(R.id.webView);
+
+            float current_zoom = wv.getScale() * 100;
+            int zoom = Math.round(current_zoom);
+
+            wv.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", "");
+
+            wv.setInitialScale(zoom);
+        }
+
         public void saveImg() {
             //If null, do nothing
-            if(originalOne == null)
+            if(currentOne == null)
                 return;
 
             if(!canWrite)
                 return;
-
-            ImageView iv = (findViewById(R.id.imageView2));
-            BitmapDrawable draw = (BitmapDrawable) iv.getDrawable();
-            Bitmap bitmap = draw.getBitmap();
 
             FileOutputStream outStream = null;
             File sdCard = Environment.getExternalStorageDirectory();
@@ -112,7 +136,7 @@ public class MainActivity extends AppCompatActivity
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+            currentOne.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
             Toast.makeText(this, getResources().getString(R.string.save_toast) + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
             try {
                 outStream.flush();
@@ -167,8 +191,12 @@ public class MainActivity extends AppCompatActivity
                     if (cursor.moveToFirst()) {
                         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                         String filePath = cursor.getString(columnIndex);
+
+
+
                         originalOne = BitmapFactory.decodeFile(filePath);
-                        ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(originalOne);
+                        currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
+                        refreshView();
                     }
                     cursor.close();
                 }
@@ -177,11 +205,12 @@ public class MainActivity extends AppCompatActivity
                 if (resultCode == RESULT_OK) {
                     try {
                         originalOne = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriFilePath);
+                        currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
+                        refreshView();
                     }
                     catch (Exception e) {
                         e.printStackTrace();
                     }
-                    ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(originalOne);
                 }
             break;
         }
@@ -189,28 +218,30 @@ public class MainActivity extends AppCompatActivity
 
 
     public void validateSeekbar(View v){
-        ImageView iv = (findViewById(R.id.imageView2));
-        Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
         SeekBar sk = ( findViewById(R.id.seekbar));
         if(seekBarMode == 1)
         {
 
             int value = sk.getProgress() - sk.getMax() / 2;
-            iv.setImageBitmap(BitmapModifier.changeLuminosity(bmp, value));
+            currentOne = BitmapModifier.changeLuminosity(currentOne, value);
         }
         else
         {
             double value = 2.0 * sk.getProgress() / sk.getMax();
-            iv.setImageBitmap(BitmapModifier.changeContrast(bmp, value));
+            currentOne = BitmapModifier.changeContrast(currentOne, value);
 
         }
         (findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
+        refreshView();
         sk.setProgress(sk.getMax() / 2);
     }
 
     public void reinit(){
-        if(originalOne != null)
-            ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(originalOne);
+        if(originalOne != null) {
+            currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
+            refreshView();
+        }
+
     }
 
 
@@ -220,15 +251,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -287,6 +309,9 @@ public class MainActivity extends AppCompatActivity
         {
             cameraAcces = true;
         }
+        WebView wv = (WebView)findViewById(R.id.webView);
+        wv.getSettings().setSupportZoom(true);
+        wv.getSettings().setBuiltInZoomControls(true);
     }
 
     @Override
@@ -355,45 +380,38 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.contra) {
             seekBarMode = 2;
         } else if (id == R.id.gris) {
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            iv.setImageBitmap(BitmapModifier.changeTint(bmp, 0));
+             currentOne = BitmapModifier.changeTint(currentOne, 0);
+             refreshView();
         }
         else if(id == R.id.sepia){
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            iv.setImageBitmap(BitmapModifier.changeTint(bmp, 1));
+            currentOne = BitmapModifier.changeTint(currentOne, 1);
+            refreshView();
         }
         else if(id == R.id.histo)
         {
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            iv.setImageBitmap(BitmapModifier.equalizeHisto(bmp));
+            currentOne = BitmapModifier.equalizeHisto(currentOne);
+            refreshView();
         }
         else if(id == R.id.Gaussien3 )
         {
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] gauss = {{1.f/16, 1.f/8, 1.f/16},
                     {1.f/8, 1.f/4, 1.f/8},
                     {1.f/16, 1.f/8, 1.f/16}};
-            iv.setImageBitmap(BitmapModifier.convolution(bmp,gauss,3));
+            currentOne = BitmapModifier.convolution(currentOne,gauss,3);
+            refreshView();
         }
         else if(id == R.id.Gaussien5 )
         {
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] gauss = {{1.f/256, 4.f/256, 6.f/256, 4.f/256, 1.f/256},
                     {4.f/256, 16.f/256, 24.f/256, 16.f/256, 4.f/256},
                     {6.f/256, 24.f/256, 36.f/256, 24.f/256, 6.f/256},
                     {4.f/256, 16.f/256, 24.f/256, 16.f/256, 4.f/256},
                     {1.f/256, 4.f/256, 6.f/256, 4.f/256, 1.f/256}};
-            iv.setImageBitmap(BitmapModifier.convolution(bmp,gauss,5));
+            currentOne = BitmapModifier.convolution(currentOne,gauss,5);
+            refreshView();
         }
         else if(id == R.id.Gaussien7 )
         {
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] gauss = {{0.000036f,	0.000363f,	0.001446f,	0.002291f,	0.001446f,	0.000363f,	0.000036f},
                     {0.000363f,	0.003676f,	0.014662f,	0.023226f,	0.014662f,	0.003676f,	0.000363f},
                     {0.001446f,	0.014662f,	0.058488f,	0.092651f,	0.058488f,	0.014662f,	0.001446f},
@@ -401,40 +419,37 @@ public class MainActivity extends AppCompatActivity
                     {0.001446f,	0.014662f,	0.058488f,	0.092651f,	0.058488f,	0.014662f,	0.001446f},
                     {0.000363f,	0.003676f,	0.014662f,	0.023226f,	0.014662f,	0.003676f,	0.000363f},
                     {0.000036f,	0.000363f,	0.001446f,	0.002291f,	0.001446f,	0.000363f,	0.000036f}};
-            iv.setImageBitmap(BitmapModifier.convolution(bmp,gauss,7));
+            currentOne = BitmapModifier.convolution(currentOne,gauss,7);
+            refreshView();
         }
         else if(id == R.id.moyen )
         {
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] moyen = {{1.f/9, 1.f/9, 1.f/9},
                     {1.f/9, 1.f/9, 1.f/9},
                     {1.f/9, 1.f/9, 1.f/9}};
-            iv.setImageBitmap(BitmapModifier.convolution(bmp,moyen,3));
+            currentOne = BitmapModifier.convolution(currentOne,moyen,3);
+            refreshView();
         }
         else if(id == R.id.Laplacien )
         {
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] laplacian = {{0, 1, 0},
                     {1, -4, 1},
                     {0, 1, 0}};
-            iv.setImageBitmap(BitmapModifier.convolution(bmp,laplacian,3));
+            currentOne = BitmapModifier.convolution(currentOne,laplacian,3);
+            refreshView();
         }
         else if(id == R.id.Sobel )
         {
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
             final float[][] laplacian = {{-1, -2, -1},
                     {0, 0, 0},
                     {1, 2, 1}};
-            iv.setImageBitmap(BitmapModifier.convolution(bmp,laplacian,3));
+            currentOne = BitmapModifier.convolution(currentOne,laplacian,3);
+            refreshView();
         }
         else if(id == R.id.rotate)
         {
-            ImageView iv = (findViewById(R.id.imageView2));
-            Bitmap bmp = ((BitmapDrawable)iv.getDrawable()).getBitmap();
-            iv.setImageBitmap(BitmapModifier.rotateBitmap(bmp,90));
+            currentOne = BitmapModifier.rotateBitmap(currentOne, 90);
+            refreshView();
         }
 
         if(seekBarMode != 0)
