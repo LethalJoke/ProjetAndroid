@@ -199,7 +199,9 @@ public class MainActivity extends AppCompatActivity
                     try {
                         originalOne = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriFilePath);
                     }
-                    catch (Exception e) {}
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(originalOne);
                 }
             break;
