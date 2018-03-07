@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity
     public void takePhoto() {
         if(!cameraAcces)
             return;
-        File mainDirectory = new File(Environment.getExternalStorageDirectory(), "/ModifiedImages");
+        File mainDirectory = new File(Environment.getExternalStorageDirectory(), "/Camera");
         if (!mainDirectory.exists())
             mainDirectory.mkdirs();
 
@@ -196,28 +196,10 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAKE_PHOTO_ACTIVITY_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    /*String[] projection = new String[]{
-                            MediaStore.Images.ImageColumns._ID,
-                            MediaStore.Images.ImageColumns.DATA,
-                            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
-                            MediaStore.Images.ImageColumns.DATE_TAKEN,
-                            MediaStore.Images.ImageColumns.MIME_TYPE
-                    };
-                    final Cursor cursor = getContentResolver()
-                            .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
-                                    null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
-                    if (cursor.moveToFirst()) {
-                        final ImageView imageView = findViewById(R.id.imageView2);
-                        String imageLocation = cursor.getString(1);
-                        File imageFile = new File(imageLocation);
-                        if (imageFile.exists()) {
-                            Bitmap bm = BitmapFactory.decodeFile(imageLocation);
-                            imageView.setImageBitmap(bm);
-                        }
-                    }*/
-                    //affiche la dernière image de la galerie, mais pas la derniere photo prise à cause du temps de latence mis par la galerie pour détecter la nouvelle image
-
-                    originalOne = BitmapFactory.decodeFile(uriFilePath.getPath()); //chemin de type nul (content://lj.projetandroid/external_files/ModifiedImages//storage/emulated/0/ModifiedImages/)
+                    try {
+                        originalOne = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriFilePath);
+                    }
+                    catch (Exception e) {}
                     ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(originalOne);
                 }
             break;
