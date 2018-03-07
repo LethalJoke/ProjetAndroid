@@ -1,6 +1,9 @@
 package lj.projetandroid;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -14,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,6 +35,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -106,7 +112,7 @@ public class MainActivity extends AppCompatActivity
             File sdCard = Environment.getExternalStorageDirectory();
             File dir = new File(sdCard.getAbsolutePath() + "/ModifiedImages");
             dir.mkdirs();
-            String fileName = String.format("%d.jpg", System.currentTimeMillis());
+            @SuppressLint("DefaultLocale") String fileName = String.format("%d.jpg", System.currentTimeMillis());
             File outFile = new File(dir, fileName);
             try {
                 outStream = new FileOutputStream(outFile);
@@ -135,13 +141,39 @@ public class MainActivity extends AppCompatActivity
         intent.setType("image/*");
         startActivityForResult(intent, SELECT_PICTURE_ACTIVITY_REQUEST_CODE);
     }
+    private Uri uriFilePath;
     public void takePhoto(View v) {
         if(!cameraAcces)
             return;
+            File mainDirectory = new File(Environment.getExternalStorageDirectory(), "/ModifiedImages");
+            if (!mainDirectory.exists())
+                mainDirectory.mkdirs();
 
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, TAKE_PHOTO_ACTIVITY_REQUEST_CODE);
+            Calendar calendar = Calendar.getInstance();
+
+            uriFilePath = FileProvider.getUriForFile(MainActivity.this,
+                BuildConfig.APPLICATION_ID + ".provider",
+                new File(mainDirectory, calendar.getTimeInMillis()+".jpg"));
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uriFilePath);
+            startActivityForResult(intent, 1);
     }
+
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
@@ -162,34 +194,30 @@ public class MainActivity extends AppCompatActivity
                 break;
             case TAKE_PHOTO_ACTIVITY_REQUEST_CODE:
                 if (resultCode == RESULT_OK) {
-                    Bitmap bitmap = (Bitmap)imageReturnedIntent.getExtras().get("imageReturnedIntent");
-                    /*FileOutputStream outStream = null;
-                    File sdCard = Environment.getExternalStorageDirectory();
-                    File dir = new File(sdCard.getAbsolutePath() + "/ModifiedImages");
-                    dir.mkdirs();
-                    String fileName = String.format("%d.jpg", System.currentTimeMillis());
-                    File outFile = new File(dir, fileName);
-                    try {
-                        outStream = new FileOutputStream(outFile);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-                    Toast.makeText(this, "Image sauvegardée : " + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
-                    try {
-                        outStream.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        outStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    /*String[] projection = new String[]{
+                            MediaStore.Images.ImageColumns._ID,
+                            MediaStore.Images.ImageColumns.DATA,
+                            MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME,
+                            MediaStore.Images.ImageColumns.DATE_TAKEN,
+                            MediaStore.Images.ImageColumns.MIME_TYPE
+                    };
+                    final Cursor cursor = getContentResolver()
+                            .query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, projection, null,
+                                    null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+                    if (cursor.moveToFirst()) {
+                        final ImageView imageView = findViewById(R.id.imageView2);
+                        String imageLocation = cursor.getString(1);
+                        File imageFile = new File(imageLocation);
+                        if (imageFile.exists()) {
+                            Bitmap bm = BitmapFactory.decodeFile(imageLocation);
+                            imageView.setImageBitmap(bm);
+                        }
                     }*/
-                    ((ImageView) findViewById(R.id.imageView2)).setImageBitmap(bitmap);
+                    //affiche la dernière image de la galerie, mais pas la derniere photo prise à cause du temps de latence mis par la galerie pour détecter la nouvelle image
+
+                    originalOne = BitmapFactory.decodeFile(uriFilePath.getPath()); //chemin de type nul (content://lj.projetandroid/external_files/ModifiedImages//storage/emulated/0/ModifiedImages/)
+                    ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(originalOne);
                 }
-
-
             break;
         }
     }
