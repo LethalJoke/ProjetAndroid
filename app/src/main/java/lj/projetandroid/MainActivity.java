@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-        public void saveImg(View v) {
+        public void saveImg() {
             //If null, do nothing
             if(originalOne == null)
                 return;
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity
                 e.printStackTrace();
             }
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-            Toast.makeText(this, R.string.save_toast + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getResources().getString(R.string.save_toast) + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
             try {
                 outStream.flush();
             } catch (IOException e) {
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-    public void selectPicture(View v) {
+    public void selectPicture() {
         if(!canRead)
             return;
 
@@ -141,23 +141,25 @@ public class MainActivity extends AppCompatActivity
         intent.setType("image/*");
         startActivityForResult(intent, SELECT_PICTURE_ACTIVITY_REQUEST_CODE);
     }
+
     private Uri uriFilePath;
-    public void takePhoto(View v) {
+
+    public void takePhoto() {
         if(!cameraAcces)
             return;
-            File mainDirectory = new File(Environment.getExternalStorageDirectory(), "/ModifiedImages");
-            if (!mainDirectory.exists())
-                mainDirectory.mkdirs();
+        File mainDirectory = new File(Environment.getExternalStorageDirectory(), "/ModifiedImages");
+        if (!mainDirectory.exists())
+            mainDirectory.mkdirs();
 
-            Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
 
-            uriFilePath = FileProvider.getUriForFile(MainActivity.this,
+        uriFilePath = FileProvider.getUriForFile(MainActivity.this,
                 BuildConfig.APPLICATION_ID + ".provider",
                 new File(mainDirectory, calendar.getTimeInMillis()+".jpg"));
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uriFilePath);
-            startActivityForResult(intent, 1);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriFilePath);
+        startActivityForResult(intent, 1);
     }
 
     private String getRealPathFromURI(Uri contentURI) {
@@ -243,7 +245,7 @@ public class MainActivity extends AppCompatActivity
         sk.setProgress(sk.getMax() / 2);
     }
 
-    public void reinit(View v){
+    public void reinit(){
         if(originalOne != null)
             ((ImageView)findViewById(R.id.imageView2)).setImageBitmap(originalOne);
     }
@@ -366,13 +368,31 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
+        int id = item.getItemId();
+        seekBarMode = 0;
+
+        if(id == R.id.galerie)
+        {
+            selectPicture();
+        }
+        else if(id == R.id.reinit)
+        {
+            reinit();
+        }
+        else if(id == R.id.save)
+        {
+            saveImg();
+        }
+        else if(id == R.id.photo)
+        {
+            takePhoto();
+        }
+
         //If null, do nothing
         if(originalOne == null)
             return true;
 
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
-        seekBarMode = 0;
 
         if (id == R.id.lumino) {
             seekBarMode = 1;

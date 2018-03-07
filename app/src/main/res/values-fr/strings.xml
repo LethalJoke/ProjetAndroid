@@ -23,4 +23,6 @@
     <string name="filtre_gaussien5">Flou Gaussien 5x5</string>
     <string name="filtre_gaussien7">Flou Gaussien 7x7</string>
     <string name="save_toast">"Image sauvegardée : "</string>
+    <string name="chargement_et_sauvegarde">Chargement et Sauvegarde</string>
+    <string name="photo">Prendre une photo</string>
 </resources>

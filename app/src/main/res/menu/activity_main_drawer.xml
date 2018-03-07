@@ -3,6 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
+    <item android:title="@string/chargement_et_sauvegarde">
+        <menu>
+            <item
+                android:id="@+id/galerie"
+                android:title="@string/galerie"/>
+            <item
+                android:id="@+id/photo"
+                android:title="@string/photo" />
+            <item
+                android:id="@+id/reinit"
+                android:title="@string/r_initialiser" />
+            <item
+                android:id="@+id/save"
+                android:title="@string/save" />
+        </menu>
+    </item>
+
     <item android:title="@string/fonctions_basiques">
         <menu>
             <item

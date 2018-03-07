@@ -24,5 +24,7 @@
     <string name="save">Save</string>
     <string name="convolution">Convolution</string>
     <string name="rotate">Rotate</string>
-    <string name="save_toast">"Image saved : "</string>
+    <string name="save_toast">"Picture saved : "</string>
+    <string name="chargement_et_sauvegarde">Loading and Saving</string>
+    <string name="photo">Use the camera</string>
 </resources>
