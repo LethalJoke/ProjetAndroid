@@ -93,9 +93,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
-
-
         public void saveImg() {
             //If null, do nothing
             if(originalOne == null)
@@ -363,7 +360,13 @@ public class MainActivity extends AppCompatActivity
         {
             reinit();
         }
-        else if(id == R.id.save)
+
+        //If null, do nothing
+        if(originalOne == null)
+            return true;
+
+        // Handle navigation view item clicks here.
+        if(id == R.id.save)
         {
             saveImg();
         }
@@ -371,14 +374,7 @@ public class MainActivity extends AppCompatActivity
         {
             takePhoto();
         }
-
-        //If null, do nothing
-        if(originalOne == null)
-            return true;
-
-        // Handle navigation view item clicks here.
-
-        if (id == R.id.lumino) {
+        else if (id == R.id.lumino) {
             seekBarMode = 1;
         } else if (id == R.id.contra) {
             seekBarMode = 2;
