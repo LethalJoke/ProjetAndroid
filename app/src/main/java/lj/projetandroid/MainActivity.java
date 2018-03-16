@@ -42,22 +42,22 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-   private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
-   private static final int MY_PERMISSIONS_REQUEST_WRITE_STORAGE = 1;
-   private static final int MY_PERMISSIONS_REQUEST_CAMERA_ACCESS = 2;
-   private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
-   private static final int TAKE_PHOTO_ACTIVITY_REQUEST_CODE = 1;
-   private boolean canRead = false;
-   private boolean canWrite = false;
-   private boolean cameraAcces = false;
-   private Bitmap originalOne = null;
-   private Bitmap currentOne = null;
+    private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_STORAGE = 1;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA_ACCESS = 2;
+    private static final int SELECT_PICTURE_ACTIVITY_REQUEST_CODE = 0;
+    private static final int TAKE_PHOTO_ACTIVITY_REQUEST_CODE = 1;
+    private boolean canRead = false;
+    private boolean canWrite = false;
+    private boolean cameraAcces = false;
+    private Bitmap originalOne = null;
+    private Bitmap currentOne = null;
 
-   /*Modes liés à la seekbar
-   0 -> Aucun
-   1 -> Luminosité
-   2 -> Contraste
-    */
+    /*Modes liés à la seekbar
+    0 -> Aucun
+    1 -> Luminosité
+    2 -> Contraste
+     */
     private int seekBarMode = 0;
 
     @Override
@@ -94,61 +94,61 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-        public void refreshView()
-        {
-            String html="<html><body><img src='{IMAGE_PLACEHOLDER}' /></body></html>";
+    public void refreshView()
+    {
+        String html="<html><body><img src='{IMAGE_PLACEHOLDER}' /></body></html>";
 
-            // Convert bitmap to Base64 encoded image for web
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            currentOne.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-            String imgageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
-            String image = "data:image/png;base64," + imgageBase64;
+        // Convert bitmap to Base64 encoded image for web
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        currentOne.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
+        String imgageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
+        String image = "data:image/png;base64," + imgageBase64;
 
-            // Use image for the img src parameter in your html and load to webview
-            html = html.replace("{IMAGE_PLACEHOLDER}", image);
-            WebView wv = (WebView)findViewById(R.id.webView);
+        // Use image for the img src parameter in your html and load to webview
+        html = html.replace("{IMAGE_PLACEHOLDER}", image);
+        WebView wv = (WebView)findViewById(R.id.webView);
 
-            float current_zoom = wv.getScale() * 100;
-            int zoom = Math.round(current_zoom);
+        float current_zoom = wv.getScale() * 100;
+        int zoom = Math.round(current_zoom);
 
-            wv.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", "");
+        wv.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", "");
 
-            wv.setInitialScale(zoom);
+        wv.setInitialScale(zoom);
+    }
+
+    public void saveImg() {
+        //If null, do nothing
+        if(currentOne == null)
+            return;
+
+        if(!canWrite)
+            return;
+
+        FileOutputStream outStream = null;
+        File sdCard = Environment.getExternalStorageDirectory();
+        File dir = new File(sdCard.getAbsolutePath() + "/ModifiedImages");
+        dir.mkdirs();
+        @SuppressLint("DefaultLocale") String fileName = String.format("%d.jpg", System.currentTimeMillis());
+        File outFile = new File(dir, fileName);
+        try {
+            outStream = new FileOutputStream(outFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-
-        public void saveImg() {
-            //If null, do nothing
-            if(currentOne == null)
-                return;
-
-            if(!canWrite)
-                return;
-
-            FileOutputStream outStream = null;
-            File sdCard = Environment.getExternalStorageDirectory();
-            File dir = new File(sdCard.getAbsolutePath() + "/ModifiedImages");
-            dir.mkdirs();
-            @SuppressLint("DefaultLocale") String fileName = String.format("%d.jpg", System.currentTimeMillis());
-            File outFile = new File(dir, fileName);
-            try {
-                outStream = new FileOutputStream(outFile);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            currentOne.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-            Toast.makeText(this, getResources().getString(R.string.save_toast) + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
-            try {
-                outStream.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                outStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        currentOne.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+        Toast.makeText(this, getResources().getString(R.string.save_toast) + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
+        try {
+            outStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        try {
+            outStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void selectPicture() {
         if(!canRead)
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity
                         e.printStackTrace();
                     }
                 }
-            break;
+                break;
         }
     }
 
@@ -357,9 +357,9 @@ public class MainActivity extends AppCompatActivity
         {
             selectPicture();
         }
-        else if(id == R.id.reinit)
+        else if(id == R.id.photo)
         {
-            reinit();
+            takePhoto();
         }
 
         //If null, do nothing
@@ -371,17 +371,17 @@ public class MainActivity extends AppCompatActivity
         {
             saveImg();
         }
-        else if(id == R.id.photo)
+        else if(id == R.id.reinit)
         {
-            takePhoto();
+            reinit();
         }
         else if (id == R.id.lumino) {
             seekBarMode = 1;
         } else if (id == R.id.contra) {
             seekBarMode = 2;
         } else if (id == R.id.gris) {
-             currentOne = BitmapModifier.changeTint(currentOne, 0);
-             refreshView();
+            currentOne = BitmapModifier.changeTint(currentOne, 0);
+            refreshView();
         }
         else if(id == R.id.sepia){
             currentOne = BitmapModifier.changeTint(currentOne, 1);
