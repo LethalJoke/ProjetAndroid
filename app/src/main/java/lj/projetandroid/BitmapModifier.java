@@ -7,8 +7,18 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 
+/**
+ * Responsible for all image modifications
+ */
 public abstract class BitmapModifier {
 
+    /**
+     * Scale the color between a maximum value and a minimum value
+     * @param color float
+     * @param min float
+     * @param max float
+     * @return color
+     */
     private static float scaleColor(float color, float min, float max)
     {
         if(color > max)
@@ -18,6 +28,13 @@ public abstract class BitmapModifier {
         return color;
     }
 
+    /**
+     * Scale the color between a maximum value and a minimum value
+     * @param color int
+     * @param min int
+     * @param max int
+     * @return color
+     */
     private static int scaleColor(int color, int min, int max)
     {
         if(color > max)
@@ -27,6 +44,12 @@ public abstract class BitmapModifier {
         return color;
     }
 
+    /**
+     * Change the luminosity
+     * @param bmp Bitmap
+     * @param value int
+     * @return Bitmap
+     */
     public static Bitmap changeLuminosity(Bitmap bmp, int value)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
@@ -51,6 +74,12 @@ public abstract class BitmapModifier {
         return bmpResult;
     }
 
+    /**
+     * Change the contrast
+     * @param bmp Bitmap
+     * @param value double
+     * @return bitmap
+     */
     public static Bitmap changeContrast(Bitmap bmp, double value)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
@@ -75,8 +104,12 @@ public abstract class BitmapModifier {
         return bmpResult;
     }
 
-    //Mode : 0-> Grey
-    // 1-> Sepia
+    /**
+     * Change the tint
+     * @param bmp Bitmap
+     * @param mode int  0-> GreyScale 1-> Sepia
+     * @return bitmap
+     */
     public static Bitmap changeTint(Bitmap bmp, int mode)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
@@ -116,6 +149,11 @@ public abstract class BitmapModifier {
         return bmpResult;
     }
 
+    /**
+     * Equalize the histogram
+     * @param bmp Bitmap
+     * @return bitmap
+     */
     public static Bitmap equalizeHisto(Bitmap bmp)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
@@ -152,6 +190,13 @@ public abstract class BitmapModifier {
         return bmpResult;
     }
 
+    /**
+     * Convolute the Bitmap using a matrice
+     * @param bmp Bitmap
+     * @param matrice float[][]
+     * @param size int
+     * @return bitmap
+     */
     public static Bitmap convolution(Bitmap bmp, float[][] matrice, int size) {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
         int width = bmpResult.getWidth();
@@ -185,6 +230,12 @@ public abstract class BitmapModifier {
         return bmpResult;
     }
 
+    /**
+     * Rotate the image
+     * @param bmp Bitmap
+     * @param value float
+     * @return bitmap
+     */
     public static Bitmap rotateBitmap(Bitmap bmp, float value)
     {
         Matrix matrix = new Matrix();

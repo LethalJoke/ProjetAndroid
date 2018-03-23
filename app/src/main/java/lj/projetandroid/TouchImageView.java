@@ -38,6 +38,9 @@ import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 
+/**
+ *
+ */
 public class TouchImageView extends android.support.v7.widget.AppCompatImageView {
 
     private static final String DEBUG = "DEBUG";
@@ -98,21 +101,40 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
     private OnTouchListener userTouchListener = null;
     private OnTouchImageViewListener touchImageViewListener = null;
 
+    /**
+     *
+     * @param context
+     */
     public TouchImageView(Context context) {
         super(context);
         sharedConstructing(context);
     }
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     */
     public TouchImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         sharedConstructing(context);
     }
 
+    /**
+     *
+     * @param context
+     * @param attrs
+     * @param defStyle
+     */
     public TouchImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         sharedConstructing(context);
     }
 
+    /**
+     *
+     * @param context
+     */
     private void sharedConstructing(Context context) {
         super.setClickable(true);
         this.context = context;
@@ -136,19 +158,35 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         super.setOnTouchListener(new PrivateOnTouchListener());
     }
 
+    /**
+     *
+     * @param l
+     */
     @Override
     public void setOnTouchListener(View.OnTouchListener l) {
         userTouchListener = l;
     }
 
+    /**
+     *
+     * @param l
+     */
     public void setOnTouchImageViewListener(OnTouchImageViewListener l) {
         touchImageViewListener = l;
     }
 
+    /**
+     *
+     * @param l
+     */
     public void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener l) {
         doubleTapListener = l;
     }
 
+    /**
+     *
+     * @param resId
+     */
     @Override
     public void setImageResource(int resId) {
         super.setImageResource(resId);
@@ -156,6 +194,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         fitImageToView();
     }
 
+    /**
+     *
+     * @param bm
+     */
     @Override
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
@@ -163,6 +205,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         fitImageToView();
     }
 
+    /**
+     *
+     * @param drawable
+     */
     @Override
     public void setImageDrawable(Drawable drawable) {
         super.setImageDrawable(drawable);
@@ -170,6 +216,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         fitImageToView();
     }
 
+    /**
+     *
+     * @param uri
+     */
     @Override
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
@@ -177,6 +227,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         fitImageToView();
     }
 
+    /**
+     *
+     * @param type
+     */
     @Override
     public void setScaleType(ScaleType type) {
         if (type == ScaleType.FIT_START || type == ScaleType.FIT_END) {
@@ -197,6 +251,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public ScaleType getScaleType() {
         return mScaleType;
@@ -241,6 +299,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
@@ -256,6 +318,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return bundle;
     }
 
+    /**
+     *
+     * @param state
+     */
     @Override
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
@@ -275,6 +341,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         super.onRestoreInstanceState(state);
     }
 
+    /**
+     *
+     * @param canvas
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         onDrawReady = true;
@@ -286,6 +356,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         super.onDraw(canvas);
     }
 
+    /**
+     *
+     * @param newConfig
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -476,6 +550,13 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         matrix.setValues(m);
     }
 
+    /**
+     *
+     * @param trans
+     * @param viewSize
+     * @param contentSize
+     * @return
+     */
     private float getFixTrans(float trans, float viewSize, float contentSize) {
         float minTrans, maxTrans;
 
@@ -495,6 +576,13 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return 0;
     }
 
+    /**
+     *
+     * @param delta
+     * @param viewSize
+     * @param contentSize
+     * @return
+     */
     private float getFixDragTrans(float delta, float viewSize, float contentSize) {
         if (contentSize <= viewSize) {
             return 0;
@@ -502,14 +590,27 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         return delta;
     }
 
+    /**
+     *
+     * @return
+     */
     private float getImageWidth() {
         return matchViewWidth * normalizedScale;
     }
 
+    /**
+     *
+     * @return
+     */
     private float getImageHeight() {
         return matchViewHeight * normalizedScale;
     }
 
+    /**
+     *
+     * @param widthMeasureSpec
+     * @param heightMeasureSpec
+     */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         Drawable drawable = getDrawable();
@@ -716,14 +817,28 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
+    /**
+     *
+     * @param state
+     */
     private void setState(State state) {
         this.state = state;
     }
 
+    /**
+     *
+     * @param direction
+     * @return
+     */
     public boolean canScrollHorizontallyFroyo(int direction) {
         return canScrollHorizontally(direction);
     }
 
+    /**
+     *
+     * @param direction
+     * @return
+     */
     @Override
     public boolean canScrollHorizontally(int direction) {
         matrix.getValues(m);
@@ -750,6 +865,11 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
      */
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
+        /**
+         *
+         * @param e
+         * @return
+         */
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e)
         {
@@ -759,12 +879,24 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             return performClick();
         }
 
+        /**
+         *
+         * @param e
+         */
         @Override
         public void onLongPress(MotionEvent e)
         {
             performLongClick();
         }
 
+        /**
+         *
+         * @param e1
+         * @param e2
+         * @param velocityX
+         * @param velocityY
+         * @return
+         */
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
         {
@@ -780,6 +912,11 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             return super.onFling(e1, e2, velocityX, velocityY);
         }
 
+        /**
+         *
+         * @param e
+         * @return
+         */
         @Override
         public boolean onDoubleTap(MotionEvent e) {
             boolean consumed = false;
@@ -795,6 +932,11 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             return consumed;
         }
 
+        /**
+         *
+         * @param e
+         * @return
+         */
         @Override
         public boolean onDoubleTapEvent(MotionEvent e) {
             if(doubleTapListener != null) {
@@ -804,6 +946,9 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
+    /**
+     *
+     */
     public interface OnTouchImageViewListener {
         public void onMove();
     }
@@ -821,6 +966,12 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         //
         private PointF last = new PointF();
 
+        /**
+         *
+         * @param v
+         * @param event
+         * @return
+         */
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             mScaleDetector.onTouchEvent(event);
@@ -884,12 +1035,22 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
      *
      */
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        /**
+         *
+         * @param detector
+         * @return
+         */
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
             setState(State.ZOOM);
             return true;
         }
 
+        /**
+         *
+         * @param detector
+         * @return
+         */
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             scaleImage(detector.getScaleFactor(), detector.getFocusX(), detector.getFocusY(), true);
@@ -903,6 +1064,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             return true;
         }
 
+        /**
+         *
+         * @param detector
+         */
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
             super.onScaleEnd(detector);
@@ -925,6 +1090,13 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
+    /**
+     *
+     * @param deltaScale
+     * @param focusX
+     * @param focusY
+     * @param stretchImageToSuper
+     */
     private void scaleImage(double deltaScale, float focusX, float focusY, boolean stretchImageToSuper) {
 
         float lowerScale, upperScale;
@@ -968,6 +1140,13 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         private PointF startTouch;
         private PointF endTouch;
 
+        /**
+         *
+         * @param targetZoom
+         * @param focusX
+         * @param focusY
+         * @param stretchImageToSuper
+         */
         DoubleTapZoom(float targetZoom, float focusX, float focusY, boolean stretchImageToSuper) {
             setState(State.ANIMATE_ZOOM);
             startTime = System.currentTimeMillis();
@@ -985,6 +1164,9 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             endTouch = new PointF(viewWidth / 2, viewHeight / 2);
         }
 
+        /**
+         *
+         */
         @Override
         public void run() {
             float t = interpolate();
@@ -1108,6 +1290,11 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         CompatScroller scroller;
         int currX, currY;
 
+        /**
+         *
+         * @param velocityX
+         * @param velocityY
+         */
         Fling(int velocityX, int velocityY) {
             setState(State.FLING);
             scroller = new CompatScroller(context);
@@ -1139,6 +1326,9 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             currY = startY;
         }
 
+        /**
+         *
+         */
         public void cancelFling() {
             if (scroller != null) {
                 setState(State.NONE);
@@ -1146,6 +1336,9 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
             }
         }
 
+        /**
+         *
+         */
         @Override
         public void run() {
 
@@ -1177,6 +1370,9 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
+    /**
+     *
+     */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     private class CompatScroller {
         Scroller scroller;
@@ -1244,6 +1440,10 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
+    /**
+     *
+     * @param runnable
+     */
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void compatPostOnAnimation(Runnable runnable) {
         if (VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN) {
@@ -1254,6 +1454,9 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
+    /**
+     *
+     */
     private class ZoomVariables {
         public float scale;
         public float focusX;
@@ -1268,6 +1471,9 @@ public class TouchImageView extends android.support.v7.widget.AppCompatImageView
         }
     }
 
+    /**
+     *
+     */
     private void printMatrixInfo() {
         float[] n = new float[9];
         matrix.getValues(n);

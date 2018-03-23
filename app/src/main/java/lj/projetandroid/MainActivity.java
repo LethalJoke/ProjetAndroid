@@ -32,6 +32,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
+/**
+ *
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -54,6 +57,12 @@ public class MainActivity extends AppCompatActivity
      */
     private int seekBarMode = 0;
 
+    /**
+     * Check if the permissions required are granted or not
+     * @param requestCode int
+     * @param permissions String
+     * @param grantResults int[]
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[],
@@ -88,12 +97,21 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Update the view
+     */
     public void refreshView()
     {
-        TouchImageView tiv = (TouchImageView) findViewById(R.id.tiv);
+        TouchImageView tiv = findViewById(R.id.tiv);
         tiv.setImageBitmap(currentOne);
     }
 
+    /**
+     * Saves the image currently shown in image view, if the permission write has been granted.
+     * A new folder names "ModifiedImages" will be created if it does not exists.
+     * The name of the image will be set as the current time in milliseconds.
+     * When the image is saved, a temporary message is shown and says where the image has been saved
+     */
     public void saveImg() {
         //If null, do nothing
         if(currentOne == null)
@@ -127,6 +145,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Launch a new intent if the permission Read has been granted.
+     * This intent will open the gallery where the user can choose an image to open in the app.
+     */
     public void selectPicture() {
         if(!canRead)
             return;
@@ -138,6 +160,10 @@ public class MainActivity extends AppCompatActivity
 
     private Uri uriFilePath;
 
+    /**
+     * Launch a new intent if the permission Camera Acces has been granted.
+     * This intent will open the camera where the user can take a photo to use in the app.
+     */
     public void takePhoto() {
         if(!cameraAcces)
             return;
@@ -156,6 +182,14 @@ public class MainActivity extends AppCompatActivity
         startActivityForResult(intent, TAKE_PHOTO_ACTIVITY_REQUEST_CODE);
     }
 
+    /**
+     * Handle the Intents created by takePhoto or selectPicture.
+     * Save the path of the original image to permit the reset functionality
+     * It will end by putting the image in the imageView.
+     * @param requestCode int
+     * @param resultCode int
+     * @param imageReturnedIntent Intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
@@ -196,6 +230,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    /**
+     * Apply changes when the seekbar of the contrast or luminosity option is used
+     * @param v View
+     */
     public void validateSeekbar(View v){
         SeekBar sk = ( findViewById(R.id.seekbar));
         if(seekBarMode == 1)
@@ -215,6 +253,9 @@ public class MainActivity extends AppCompatActivity
         sk.setProgress(sk.getMax() / 2);
     }
 
+    /**
+     * Cancels all the modifications made on the image
+     */
     public void reinit(){
         if(originalOne != null) {
             currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
@@ -290,6 +331,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Permit the user to press back on the drawer to retract it
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer =  findViewById(R.id.drawer_layout);
@@ -300,9 +344,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Inflate the menu ; this adds items to the action bar if it is present.
+     * @param menu Menu
+     * @return always true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -322,6 +370,11 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }*/
 
+    /**
+     * Launch the method when the corresponding button in the menu is pressed
+     * @param item MenuItem
+     * @return true if there is no image loaded in the app
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -422,10 +475,16 @@ public class MainActivity extends AppCompatActivity
             currentOne = BitmapModifier.convolution(currentOne,laplacian,3);
             refreshView();
         }
-        else if(id == R.id.rotate)
+        else if(id == R.id.rotateRight)
         {
             currentOne = BitmapModifier.rotateBitmap(currentOne, 90);
             currentRotation += 90;
+            refreshView();
+        }
+        else if(id == R.id.rotateLeft)
+        {
+            currentOne = BitmapModifier.rotateBitmap(currentOne, 90);
+            currentRotation -= 90;
             refreshView();
         }
 

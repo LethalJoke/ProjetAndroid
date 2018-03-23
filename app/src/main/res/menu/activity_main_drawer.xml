@@ -38,8 +38,12 @@
                 android:id="@+id/histo"
                 android:title="@string/egalisation_de_l_histogramme" />
             <item
-                android:id="@+id/rotate"
-                android:title="@string/rotate"
+                android:id="@+id/rotateRight"
+                android:title="@string/rotateR"
+                />
+            <item
+                android:id="@+id/rotateLeft"
+                android:title="@string/rotateL"
                 />
         </menu>
     </item>
