@@ -9,6 +9,24 @@ import android.graphics.Matrix;
 
 public abstract class BitmapModifier {
 
+    private static float scaleColor(float color, float min, float max)
+    {
+        if(color > max)
+            color = max;
+        if(color < min)
+            color = min;
+        return color;
+    }
+
+    private static int scaleColor(int color, int min, int max)
+    {
+        if(color > max)
+            color = max;
+        if(color < min)
+            color = min;
+        return color;
+    }
+
     public static Bitmap changeLuminosity(Bitmap bmp, int value)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
@@ -22,18 +40,11 @@ public abstract class BitmapModifier {
             int green = Color.green(p)+ value;
             int blue = Color.blue(p)+ value;
             int alpha = Color.alpha(p);
-            if(red > 255)
-                red = 255;
-            if(blue > 255)
-                blue = 255;
-            if(green > 255)
-                green = 255;
-            if(red < 0)
-                red = 0;
-            if(blue < 0)
-                blue = 0;
-            if(green < 0)
-                green = 0;
+
+            red = scaleColor(red, 0, 255);
+            blue = scaleColor(blue, 0, 255);
+            green = scaleColor(green, 0, 255);
+
             pixs[i] = Color.argb(alpha,red,green,blue);
         }
         bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
@@ -53,18 +64,11 @@ public abstract class BitmapModifier {
             int green = (int)(value * Color.green(p)) ;
             int blue = (int)(value * Color.blue(p));
             int alpha = Color.alpha(p);
-            if(red > 255)
-                red = 255;
-            if(blue > 255)
-                blue = 255;
-            if(green > 255)
-                green = 255;
-            if(red < 0)
-                red = 0;
-            if(blue < 0)
-                blue = 0;
-            if(green < 0)
-                green = 0;
+
+            red = scaleColor(red, 0, 255);
+            blue = scaleColor(blue, 0, 255);
+            green = scaleColor(green, 0, 255);
+
             pixs[i] = Color.argb(alpha,red,green,blue);
         }
         bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
@@ -101,18 +105,11 @@ public abstract class BitmapModifier {
                 newgreen = (int)((red * 0.349) + (green * 0.686) + (blue * 0.168));
                 newblue = (int)((red * 0.272) + (green * 0.534) + (blue * 0.131));
             }
-            if(newred > 255)
-                newred = 255;
-            if(newblue > 255)
-                newblue = 255;
-            if(newgreen > 255)
-                newgreen = 255;
-            if(newred < 0)
-                newred = 0;
-            if(newblue < 0)
-                newblue = 0;
-            if(newgreen < 0)
-                newgreen = 0;
+
+            newred = scaleColor(newred, 0, 255);
+            newblue = scaleColor(newblue, 0, 255);
+            newgreen = scaleColor(newgreen, 0, 255);
+
             pixs[i] = Color.argb(alpha,newred,newgreen,newblue);
         }
         bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
@@ -147,7 +144,7 @@ public abstract class BitmapModifier {
 
 
         for(int i = 0; i < totalSize; i++) {
-            pixsHSV[i][2] =  histo[(int)(pixHSV[2] * 255)] * 255 / totalSize;
+            pixsHSV[i][2] =  scaleColor(histo[(int)(pixHSV[2] * 255)] * 255 / totalSize,0,1);
             pixs[i] = Color.HSVToColor(pixsHSV[i]);
         }
 
