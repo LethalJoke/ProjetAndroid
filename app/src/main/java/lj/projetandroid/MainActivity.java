@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity
     private boolean cameraAcces = false;
     private Bitmap originalOne = null;
     private Bitmap currentOne = null;
+    private int currentRotation = 0;
 
     /*Modes liés à la seekbar
     0 -> Aucun
@@ -172,6 +173,7 @@ public class MainActivity extends AppCompatActivity
 
                         originalOne = BitmapFactory.decodeFile(filePath);
                         currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
+                        currentRotation = 0;
                         refreshView();
                     }
                     cursor.close();
@@ -182,6 +184,7 @@ public class MainActivity extends AppCompatActivity
                     try {
                         originalOne = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriFilePath);
                         currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
+                        currentRotation = 0;
                         refreshView();
                     }
                     catch (Exception e) {
@@ -422,6 +425,7 @@ public class MainActivity extends AppCompatActivity
         else if(id == R.id.rotate)
         {
             currentOne = BitmapModifier.rotateBitmap(currentOne, 90);
+            currentRotation += 90;
             refreshView();
         }
 
