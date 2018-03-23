@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,18 +20,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -96,25 +89,8 @@ public class MainActivity extends AppCompatActivity
 
     public void refreshView()
     {
-        String html="<html><body><img src='{IMAGE_PLACEHOLDER}' /></body></html>";
-
-        // Convert bitmap to Base64 encoded image for web
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        currentOne.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream.toByteArray();
-        String imgageBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT);
-        String image = "data:image/png;base64," + imgageBase64;
-
-        // Use image for the img src parameter in your html and load to webview
-        html = html.replace("{IMAGE_PLACEHOLDER}", image);
-        WebView wv = (WebView)findViewById(R.id.webView);
-
-        float current_zoom = wv.getScale() * 100;
-        int zoom = Math.round(current_zoom);
-
-        wv.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "utf-8", "");
-
-        wv.setInitialScale(zoom);
+        TouchImageView tiv = (TouchImageView) findViewById(R.id.tiv);
+        tiv.setImageBitmap(currentOne);
     }
 
     public void saveImg() {
@@ -309,9 +285,6 @@ public class MainActivity extends AppCompatActivity
         {
             cameraAcces = true;
         }
-        WebView wv = (WebView)findViewById(R.id.webView);
-        wv.getSettings().setSupportZoom(true);
-        wv.getSettings().setBuiltInZoomControls(true);
     }
 
     @Override

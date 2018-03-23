@@ -8,17 +8,35 @@
     tools:context="lj.projetandroid.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+
+    <lj.projetandroid.TouchImageView
+        android:id="@+id/tiv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.213" />
+
     <LinearLayout
         android:id="@+id/layout_seekbar"
         android:layout_width="368dp"
         android:layout_height="81dp"
         android:layout_marginBottom="28dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/border"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <SeekBar
             android:id="@+id/seekbar"
@@ -35,21 +53,5 @@
             android:text="@string/ok" />
 
     </LinearLayout>
-
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/border"
-        android:padding="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.213" />
 
 </android.support.constraint.ConstraintLayout>
