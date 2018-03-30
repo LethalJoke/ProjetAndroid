@@ -182,7 +182,7 @@ public abstract class BitmapModifier {
 
 
         for(int i = 0; i < totalSize; i++) {
-            pixsHSV[i][2] =  scaleColor(histo[(int)(pixHSV[2] * 255)] * 255 / totalSize,0,1);
+            pixsHSV[i][2] =  scaleColor(((float)histo[(int)(pixHSV[2] * 255)]) / totalSize,0.f,1.f);
             pixs[i] = Color.HSVToColor(pixsHSV[i]);
         }
 
