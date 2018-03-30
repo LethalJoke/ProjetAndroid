@@ -209,6 +209,8 @@ public class MainActivity extends AppCompatActivity
                         currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
                         currentRotation = 0;
                         refreshView();
+                        TouchImageView tiv = findViewById(R.id.tiv);
+                        tiv.setZoom(0.99f);
                     }
                     cursor.close();
                 }
@@ -220,6 +222,8 @@ public class MainActivity extends AppCompatActivity
                         currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
                         currentRotation = 0;
                         refreshView();
+                        TouchImageView tiv = findViewById(R.id.tiv);
+                        tiv.setZoom(0.99f);
                     }
                     catch (Exception e) {
                         e.printStackTrace();
