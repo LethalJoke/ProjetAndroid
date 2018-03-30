@@ -26,4 +26,8 @@
     <string name="save_toast">"Image sauvegardée : "</string>
     <string name="chargement_et_sauvegarde">Chargement et Sauvegarde</string>
     <string name="photo">Prendre une photo</string>
+    <string name="warning">Veuillez charger une image depuis la gallerie ou bien prendre une photo avant de tester les autres fonctionnalités.</string>
+    <string name="projet_image_android">Projet Image Android</string>
+    <string name="ghislain_lartigue_et_adrien_pedeau">Ghislain LARTIGUE et Adrien PEDEAU</string>
+
 </resources>

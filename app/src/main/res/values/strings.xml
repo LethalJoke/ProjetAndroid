@@ -28,4 +28,7 @@
     <string name="save_toast">"Picture saved : "</string>
     <string name="chargement_et_sauvegarde">Loading and Saving</string>
     <string name="photo">Use the camera</string>
+    <string name="warning">Please load an image before doing anything else.</string>
+    <string name="projet_image_android">Android Image Project</string>
+    <string name="ghislain_lartigue_et_adrien_pedeau">Ghislain LARTIGUE and Adrien PEDEAU</string>
 </resources>

@@ -132,6 +132,7 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         currentOne.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
         Toast.makeText(this, getResources().getString(R.string.save_toast) + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
         try {
             outStream.flush();
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity
     public void takePhoto() {
         if(!cameraAcces)
             return;
-        File mainDirectory = new File(Environment.getExternalStorageDirectory(), "/Camera");
+        File mainDirectory = new File(Environment.getExternalStorageDirectory(), "/ModifiedImages");
         if (!mainDirectory.exists())
             mainDirectory.mkdirs();
 
@@ -396,8 +397,10 @@ public class MainActivity extends AppCompatActivity
         }
 
         //If null, do nothing
-        if(originalOne == null)
+        if(originalOne == null && !(id==R.id.galerie||id==R.id.photo)) {
+            Toast.makeText(this, R.string.warning, Toast.LENGTH_LONG).show();
             return true;
+        }
 
         // Handle navigation view item clicks here.
         if(id == R.id.save)
@@ -481,14 +484,14 @@ public class MainActivity extends AppCompatActivity
         }
         else if(id == R.id.rotateRight)
         {
-            currentOne = BitmapModifier.rotateBitmap(currentOne, 90);
-            currentRotation += 90;
+            currentOne = BitmapModifier.rotateBitmap(currentOne, -90);
+            currentRotation -= 90;
             refreshView();
         }
         else if(id == R.id.rotateLeft)
         {
             currentOne = BitmapModifier.rotateBitmap(currentOne, 90);
-            currentRotation -= 90;
+            currentRotation += 90;
             refreshView();
         }
 
