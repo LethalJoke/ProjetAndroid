@@ -476,10 +476,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(id == R.id.Sobel )
         {
-            final float[][] laplacian = {{-1, -2, -1},
-                    {0, 0, 0},
-                    {1, 2, 1}};
-            currentOne = BitmapModifier.convolution(currentOne,laplacian,3);
+            currentOne = BitmapModifier.sobelEdgeDetection(currentOne);
             refreshView();
         }
         else if(id == R.id.rotateRight)

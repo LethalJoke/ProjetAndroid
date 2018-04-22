@@ -127,7 +127,7 @@ public abstract class BitmapModifier {
             int newred, newblue, newgreen;
             if(mode == 0)
             {
-                int grey = (int)((0.299 * red) + (0.114 * blue) + (0.587 * green));
+                int grey = (int)((0.2126  * red) + (0.0722  * blue) + (0.7152 * green));
                 newred = grey;
                 newblue = grey;
                 newgreen = grey;
@@ -241,5 +241,77 @@ public abstract class BitmapModifier {
         Matrix matrix = new Matrix();
         matrix.postRotate(value);
         return Bitmap.createBitmap(bmp , 0, 0, bmp.getWidth(), bmp.getHeight(), matrix, true);
+    }
+
+    /**
+     * Detect Eges using Sobel's kernels
+     * @param bmp Bitmap
+     * @return bitmap
+     */
+    public static Bitmap sobelEdgeDetection(Bitmap bmp)
+    {
+        final float[][] sobel_y = {{-1, -2, -1},
+                {0, 0, 0},
+                {1, 2, 1}};
+        final float[][] sobel_x = {{-1, 0,1},
+                {-2, 0, 2},
+                {-1, 0, 1}};
+
+        Bitmap bmpResult = changeTint(bmp, 0);
+
+        int width = bmpResult.getWidth();
+        int height = bmpResult.getHeight();
+        int totalSize =  width * height;
+
+        int[] pixs = new int[totalSize];
+        bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
+
+        int[] pixs_final = new int[totalSize];
+        bmpResult.getPixels(pixs_final,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
+
+        int index;
+        double magX, magY;
+        int pix, grey, mag, xn, yn;
+        int mag_max = 0;
+
+        for(int i = 1; i < width - 1; i++)
+        {
+            for(int j = 1; j < height - 1; j++)
+            {
+                magX = 0.0;
+                magY = 0.0;
+
+                //Boucle de traitement des matrices
+                for(int a = 0; a < 3; a++)
+                {
+                    for(int b = 0; b < 3; b++)
+                    {
+                        xn = i + a - 1;
+                        yn = j + b - 1;
+                        index = xn + yn * width;
+
+                        pix = pixs[index];
+                        grey = Color.red(pix); //Car l'image est en niveau de gris
+
+                        magX += grey * sobel_x[a][b];
+                        magY += grey * sobel_y[a][b];
+                    }
+                }
+                mag = (int)Math.sqrt(Math.pow(magX, 2) + Math.pow(magY, 2));
+                if(mag > mag_max)
+                    mag_max = mag;
+
+                pixs_final[i + j * width] = mag;
+            }
+        }
+
+        for(int i = 0; i < totalSize; i ++)
+        {
+            int value = (pixs_final[i] * 255) / mag_max;
+            pixs_final[i] = Color.argb(Color.alpha(pixs[i]), value, value, value);
+        }
+
+        bmpResult.setPixels(pixs_final,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
+        return bmpResult;
     }
 }
