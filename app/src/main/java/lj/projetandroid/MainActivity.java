@@ -491,6 +491,11 @@ public class MainActivity extends AppCompatActivity
             currentRotation += 90;
             refreshView();
         }
+        else if(id == R.id.cartoon)
+        {
+            currentOne = BitmapModifier.cartoonFilter(currentOne);
+            refreshView();
+        }
 
         if(seekBarMode != 0)
         {

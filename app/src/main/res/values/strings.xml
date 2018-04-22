@@ -31,4 +31,5 @@
     <string name="warning">Please load an image before doing anything else.</string>
     <string name="projet_image_android">Android Image Project</string>
     <string name="ghislain_lartigue_et_adrien_pedeau">Ghislain LARTIGUE and Adrien PEDEAU</string>
+    <string name="filtre_cartoon">Cartoon Filter</string>
 </resources>

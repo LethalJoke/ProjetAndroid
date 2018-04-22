@@ -29,5 +29,6 @@
     <string name="warning">Veuillez charger une image depuis la gallerie ou bien prendre une photo avant de tester les autres fonctionnalités.</string>
     <string name="projet_image_android">Projet Image Android</string>
     <string name="ghislain_lartigue_et_adrien_pedeau">Ghislain LARTIGUE et Adrien PEDEAU</string>
+    <string name="filtre_cartoon">Filtre Cartoon</string>
 
 </resources>

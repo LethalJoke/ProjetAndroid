@@ -68,6 +68,9 @@
             <item
                 android:id="@+id/Laplacien"
                 android:title="@string/filtre_laplacien" />
+            <item
+                android:id="@+id/cartoon"
+                android:title="@string/filtre_cartoon" />
         </menu>
     </item>
 

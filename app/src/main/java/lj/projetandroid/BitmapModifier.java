@@ -267,7 +267,6 @@ public abstract class BitmapModifier {
         bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
 
         int[] pixs_final = new int[totalSize];
-        bmpResult.getPixels(pixs_final,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
 
         int index;
         double magX, magY;
@@ -312,6 +311,72 @@ public abstract class BitmapModifier {
         }
 
         bmpResult.setPixels(pixs_final,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
+        return bmpResult;
+    }
+
+    /**
+     * Inverse Black & White pixel + increase the outline
+     * @param bmp Bitmap
+     * @return bitmap
+     */
+    private static Bitmap increaseOutline(Bitmap bmp)
+    {
+        Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
+        int width = bmpResult.getWidth();
+        int height = bmpResult.getHeight();
+        int totalSize =  width * height;
+
+        int[] pixs = new int[totalSize];
+        bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
+
+        for(int i = 0; i<totalSize; i++)
+        {
+            int value = 255 - Color.red(pixs[i]);
+            pixs[i] = Color.argb(Color.alpha(pixs[i]), value,value,value);
+        }
+
+        bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
+        return bmpResult;
+    }
+
+    private static Bitmap combineBitmaps(Bitmap color, Bitmap oulines)
+    {
+        Bitmap bmpResult = color.copy(Bitmap.Config.ARGB_8888, true);
+        int width = bmpResult.getWidth();
+        int height = bmpResult.getHeight();
+        int totalSize =  width * height;
+
+        int[] pixs = new int[totalSize];
+        bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
+
+        int[] pixs_outline = new int[totalSize];
+        oulines.getPixels(pixs_outline,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
+
+        for(int i = 0; i < totalSize; i ++)
+        {
+            int pix_o = pixs_outline[i];
+            if(Color.red(pix_o) < 165)
+                pixs[i] = pix_o;
+        }
+
+        bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
+        return bmpResult;
+    }
+
+    /**
+     * Do a cartoonish transformation of a picture
+     * @param bmp Bitmap
+     * @return bitmap
+     */
+    public static Bitmap cartoonFilter(Bitmap bmp)
+    {
+        Bitmap bmp_outline = sobelEdgeDetection(bmp);
+        bmp_outline = increaseOutline(bmp_outline);
+
+        Bitmap bmpResult = changeLuminosity(bmp, -50);
+        bmpResult = changeContrast(bmpResult, 6);
+
+        bmpResult = combineBitmaps(bmpResult, bmp_outline);
         return bmpResult;
     }
 }
