@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity
     private boolean cameraAcces = false;
     private Bitmap originalOne = null;
     private Bitmap currentOne = null;
-    private int currentRotation = 0;
 
     /*Modes liés à la seekbar
     0 -> Aucun
@@ -224,7 +223,6 @@ public class MainActivity extends AppCompatActivity
                         }
 
                         currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
-                        currentRotation = 0;
                         refreshView();
                         TouchImageView tiv = findViewById(R.id.tiv);
                         tiv.setZoom(0.99f);
@@ -245,7 +243,6 @@ public class MainActivity extends AppCompatActivity
                             originalOne = Bitmap.createScaledBitmap(originalOne,(int) (originalOne.getWidth() * fact),(int) (originalOne.getHeight() * fact), true);
                         }
                         currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
-                        currentRotation = 0;
                         refreshView();
                         TouchImageView tiv = findViewById(R.id.tiv);
                         tiv.setZoom(0.99f);
@@ -291,6 +288,16 @@ public class MainActivity extends AppCompatActivity
             refreshView();
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        if(originalOne == null)
+            return;
+        savedInstanceState.putInt("seekBarMode",seekBarMode);
+        savedInstanceState.putParcelable("originalOne",originalOne);
+        savedInstanceState.putParcelable("currentOne",currentOne);
     }
 
 
@@ -360,38 +367,19 @@ public class MainActivity extends AppCompatActivity
         }
 
         cp = new ColorPicker(this);
-        /*SeekBar seekBar = (SeekBar)findViewById(R.id.seekbar);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress,
-                                          boolean fromUser) {
-                // TODO Auto-generated method stub
-                if(seekBarMode == 1)
-                {
-
-                    int value = seekBar.getProgress() - seekBar.getMax() / 2;
-                    currentOne = BitmapModifier.changeLuminosity(currentOne, value);
-                }
-                else
-                {
-                    double value = 2.0 * seekBar.getProgress() / seekBar.getMax();
-                    currentOne = BitmapModifier.changeContrast(currentOne, value);
-
-                }
-                refreshView();
+        if(savedInstanceState != null)
+        {
+            seekBarMode = savedInstanceState.getInt("seekBarMode");
+            originalOne = savedInstanceState.getParcelable("originalOne");
+            currentOne = savedInstanceState.getParcelable("currentOne");
+            refreshView();
+            if(seekBarMode != 0)
+            {
+                (findViewById(R.id.layout_seekbar)).setVisibility(View.VISIBLE);
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // TODO Auto-generated method stub
-            }
-        });*/
+            else
+                (findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
+        }
     }
 
     /**
@@ -554,13 +542,11 @@ public class MainActivity extends AppCompatActivity
         else if(id == R.id.rotateRight)
         {
             currentOne = BitmapModifier.rotateBitmap(currentOne, -90);
-            currentRotation -= 90;
             refreshView();
         }
         else if(id == R.id.rotateLeft)
         {
             currentOne = BitmapModifier.rotateBitmap(currentOne, 90);
-            currentRotation += 90;
             refreshView();
         }
         else if(id == R.id.cartoon)
