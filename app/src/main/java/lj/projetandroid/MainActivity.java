@@ -214,6 +214,15 @@ public class MainActivity extends AppCompatActivity
 
 
                         originalOne = BitmapFactory.decodeFile(filePath);
+                        int max = ( originalOne.getWidth() > originalOne.getHeight() ? originalOne.getWidth() : originalOne.getHeight());
+
+
+                        if(max > 1980)
+                        {
+                            double fact = 1980.0 / max;
+                            originalOne = Bitmap.createScaledBitmap(originalOne,(int) (originalOne.getWidth() * fact),(int) (originalOne.getHeight() * fact), true);
+                        }
+
                         currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
                         currentRotation = 0;
                         refreshView();
@@ -227,6 +236,14 @@ public class MainActivity extends AppCompatActivity
                 if (resultCode == RESULT_OK) {
                     try {
                         originalOne = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uriFilePath);
+                        int max = ( originalOne.getWidth() > originalOne.getHeight() ? originalOne.getWidth() : originalOne.getHeight());
+
+
+                        if(max > 1980)
+                        {
+                            double fact = 1980.0 / max;
+                            originalOne = Bitmap.createScaledBitmap(originalOne,(int) (originalOne.getWidth() * fact),(int) (originalOne.getHeight() * fact), true);
+                        }
                         currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
                         currentRotation = 0;
                         refreshView();
@@ -343,6 +360,38 @@ public class MainActivity extends AppCompatActivity
         }
 
         cp = new ColorPicker(this);
+        /*SeekBar seekBar = (SeekBar)findViewById(R.id.seekbar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress,
+                                          boolean fromUser) {
+                // TODO Auto-generated method stub
+                if(seekBarMode == 1)
+                {
+
+                    int value = seekBar.getProgress() - seekBar.getMax() / 2;
+                    currentOne = BitmapModifier.changeLuminosity(currentOne, value);
+                }
+                else
+                {
+                    double value = 2.0 * seekBar.getProgress() / seekBar.getMax();
+                    currentOne = BitmapModifier.changeContrast(currentOne, value);
+
+                }
+                refreshView();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // TODO Auto-generated method stub
+            }
+        });*/
     }
 
     /**
