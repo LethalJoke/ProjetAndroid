@@ -214,27 +214,30 @@ public abstract class BitmapModifier {
         int marge = size / 2;
         int[] pixs = new int[totalSize];
         bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
-        for(int i = marge * width + marge; i < totalSize - (marge * width + marge); i++)
-        {
-            if(i % width <= marge)
-                continue;
-            if(i % width > width - marge) //?
-                continue;
-            int pix;
-            int vRed = 0;
-            int vGreen = 0;
-            int vBlue = 0;
-            for(int j = 0; j < size; j++)
-                for(int k = 0; k < size; k++)
+        for(int i = marge; i < width - marge; i++)
+            for(int j = marge; j < height - marge; j++)
+            {
+                int ind = i + j*width;
+                int pix;
+                int vRed = 0;
+                int vGreen = 0;
+                int vBlue = 0;
+                for(int a = 0; a < 3; a++)
                 {
-                    //Traitement matrice
-                     pix = pixs[(i - (marge * width + marge)) + j*width + k];
-                     vRed +=(int)(Color.red(pix) * matrice[j][k]);
-                     vGreen +=(int)(Color.green(pix) * matrice[j][k]);
-                     vBlue +=(int)(Color.blue(pix) * matrice[j][k]);
+                    for(int b = 0; b < 3; b++)
+                    {
+                        int xn = i + a - 1;
+                        int yn = j + b - 1;
+                        int index = xn + yn * width;
+
+                        pix = pixs[index];
+                        vRed +=(int)(Color.red(pix) * matrice[a][b]);
+                        vGreen +=(int)(Color.green(pix) * matrice[a][b]);
+                        vBlue +=(int)(Color.blue(pix) * matrice[a][b]);
+                    }
                 }
-            pixs[i] = Color.argb(Color.alpha(pixs[i]), vRed, vGreen, vBlue);
-        }
+                pixs[ind] = Color.argb(Color.alpha(pixs[i]), vRed, vGreen, vBlue);
+            }
         bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
         return bmpResult;
     }

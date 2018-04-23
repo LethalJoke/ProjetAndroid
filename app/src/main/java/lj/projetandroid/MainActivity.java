@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,7 +21,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     private boolean cameraAcces = false;
     private Bitmap originalOne = null;
     private Bitmap currentOne = null;
+    private int currentRot = 0;
 
     /*Modes liés à la seekbar
     0 -> Aucun
@@ -226,6 +225,7 @@ public class MainActivity extends AppCompatActivity
                         refreshView();
                         TouchImageView tiv = findViewById(R.id.tiv);
                         tiv.setZoom(0.99f);
+                        currentRot = 0;
                     }
                     cursor.close();
                 }
@@ -246,6 +246,7 @@ public class MainActivity extends AppCompatActivity
                         refreshView();
                         TouchImageView tiv = findViewById(R.id.tiv);
                         tiv.setZoom(0.99f);
+                        currentRot = 0;
                     }
                     catch (Exception e) {
                         e.printStackTrace();
@@ -284,7 +285,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void reinit(){
         if(originalOne != null) {
-            currentOne = originalOne.copy(Bitmap.Config.ARGB_8888, true);
+            currentOne = BitmapModifier.rotateBitmap(originalOne, currentRot);
             refreshView();
         }
 
@@ -542,11 +543,13 @@ public class MainActivity extends AppCompatActivity
         else if(id == R.id.rotateRight)
         {
             currentOne = BitmapModifier.rotateBitmap(currentOne, -90);
+            currentRot -= 90;
             refreshView();
         }
         else if(id == R.id.rotateLeft)
         {
             currentOne = BitmapModifier.rotateBitmap(currentOne, 90);
+            currentRot += 90;
             refreshView();
         }
         else if(id == R.id.cartoon)
