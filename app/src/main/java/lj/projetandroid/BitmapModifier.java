@@ -214,6 +214,8 @@ public abstract class BitmapModifier {
         int marge = size / 2;
         int[] pixs = new int[totalSize];
         bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
+        int[] pixs_final = new int[totalSize];
+        bmpResult.getPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(),bmpResult.getHeight());
         for(int i = marge; i < width - marge; i++)
             for(int j = marge; j < height - marge; j++)
             {
@@ -236,9 +238,9 @@ public abstract class BitmapModifier {
                         vBlue +=(int)(Color.blue(pix) * matrice[a][b]);
                     }
                 }
-                pixs[ind] = Color.argb(Color.alpha(pixs[i]), vRed, vGreen, vBlue);
+                pixs_final[ind] = Color.argb(Color.alpha(pixs[i]), vRed, vGreen, vBlue);
             }
-        bmpResult.setPixels(pixs,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
+        bmpResult.setPixels(pixs_final,0,bmpResult.getWidth(),0,0,bmpResult.getWidth(), bmpResult.getHeight());
         return bmpResult;
     }
 
