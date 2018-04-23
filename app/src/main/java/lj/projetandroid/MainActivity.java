@@ -117,28 +117,39 @@ public class MainActivity extends AppCompatActivity
      * The name of the image will be set as the current time in milliseconds.
      * When the image is saved, a temporary message is shown and says where the image has been saved
      */
-    public void saveImg() {
+    public String saveImg(Bitmap bmp, String name) {
         //If null, do nothing
-        if(currentOne == null)
-            return;
+        if(bmp == null)
+            return null;
 
         if(!canWrite)
-            return;
+            return null;
 
         FileOutputStream outStream = null;
         File sdCard = Environment.getExternalStorageDirectory();
-        File dir = new File(sdCard.getAbsolutePath() + "/ModifiedImages");
+        File dir;
+        @SuppressLint("DefaultLocale")  String fileName;
+        if(name == null) {
+            dir = new File(sdCard.getAbsolutePath() + "/ModifiedImages");
+            fileName = String.format("%d.jpg", System.currentTimeMillis());
+        }
+        else {
+            dir = new File(sdCard.getAbsolutePath() + "/BundleImages");
+            fileName = name;
+        }
+
         dir.mkdirs();
-        @SuppressLint("DefaultLocale") String fileName = String.format("%d.jpg", System.currentTimeMillis());
+
         File outFile = new File(dir, fileName);
         try {
             outStream = new FileOutputStream(outFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        currentOne.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
         sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(outFile)));
-        Toast.makeText(this, getResources().getString(R.string.save_toast) + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
+        if(name == null)
+            Toast.makeText(this, getResources().getString(R.string.save_toast) + sdCard.getAbsolutePath() +"/ModifiedImages/" + fileName, Toast.LENGTH_LONG).show();
         try {
             outStream.flush();
         } catch (IOException e) {
@@ -149,6 +160,8 @@ public class MainActivity extends AppCompatActivity
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return sdCard.getAbsolutePath() +(name == null ? "/ModifiedImages/" : "/BundleImages/")+ fileName;
     }
 
     /**
@@ -297,8 +310,8 @@ public class MainActivity extends AppCompatActivity
         if(originalOne == null)
             return;
         savedInstanceState.putInt("seekBarMode",seekBarMode);
-        savedInstanceState.putParcelable("originalOne",originalOne);
-        savedInstanceState.putParcelable("currentOne",currentOne);
+        savedInstanceState.putString("originalOne", saveImg(originalOne,"originalOne"));
+        savedInstanceState.putString("currentOne", saveImg(currentOne,"currentOne"));
     }
 
 
@@ -371,8 +384,10 @@ public class MainActivity extends AppCompatActivity
         if(savedInstanceState != null)
         {
             seekBarMode = savedInstanceState.getInt("seekBarMode");
-            originalOne = savedInstanceState.getParcelable("originalOne");
-            currentOne = savedInstanceState.getParcelable("currentOne");
+            //Traiter strings Img
+            originalOne = BitmapFactory.decodeFile(savedInstanceState.getString("originalOne"));
+            currentOne = BitmapFactory.decodeFile(savedInstanceState.getString("currentOne"));
+
             refreshView();
             if(seekBarMode != 0)
             {
@@ -380,6 +395,11 @@ public class MainActivity extends AppCompatActivity
             }
             else
                 (findViewById(R.id.layout_seekbar)).setVisibility(View.INVISIBLE);
+
+            File sdCard = Environment.getExternalStorageDirectory();
+            File dir = new File(sdCard.getAbsolutePath() + "/BundleImages");
+            dir.delete();
+
         }
     }
 
@@ -452,7 +472,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         if(id == R.id.save)
         {
-            saveImg();
+            saveImg(currentOne, null);
         }
         else if(id == R.id.reinit)
         {
