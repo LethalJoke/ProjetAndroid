@@ -108,9 +108,10 @@ public abstract class BitmapModifier {
      * Change the tint
      * @param bmp Bitmap
      * @param mode int  0-> GreyScale 1-> Sepia
+     * @parem clr Integer Color
      * @return bitmap
      */
-    public static Bitmap changeTint(Bitmap bmp, int mode)
+    public static Bitmap changeTint(Bitmap bmp, int mode, Integer clr)
     {
         Bitmap bmpResult = bmp.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -127,10 +128,18 @@ public abstract class BitmapModifier {
             int newred, newblue, newgreen;
             if(mode == 0)
             {
-                int grey = (int)((0.2126  * red) + (0.0722  * blue) + (0.7152 * green));
-                newred = grey;
-                newblue = grey;
-                newgreen = grey;
+                if(clr == null || !colorSameTint(p,clr,80)) {
+                    int grey = (int) ((0.2126 * red) + (0.0722 * blue) + (0.7152 * green));
+                    newred = grey;
+                    newblue = grey;
+                    newgreen = grey;
+                }
+                else
+                {
+                    newred = red;
+                    newblue = blue;
+                    newgreen = green;
+                }
             }
             else
             {
@@ -257,7 +266,7 @@ public abstract class BitmapModifier {
                 {-2, 0, 2},
                 {-1, 0, 1}};
 
-        Bitmap bmpResult = changeTint(bmp, 0);
+        Bitmap bmpResult = changeTint(bmp, 0, null);
 
         int width = bmpResult.getWidth();
         int height = bmpResult.getHeight();
@@ -378,5 +387,35 @@ public abstract class BitmapModifier {
 
         bmpResult = combineBitmaps(bmpResult, bmp_outline);
         return bmpResult;
+    }
+
+    /**
+     * Compare two colors
+     * @param color_one int
+     * @param color_two int
+     * @param threshold int
+     * @return boolean
+     */
+    private static boolean colorSameTint(int color_one, int color_two, int threshold)
+    {
+
+        // Mise en place de coeff pour le seuil
+        int max = Color.red(color_two);
+
+        if(Color.blue(color_two) > max)
+            max = Color.blue(color_two);
+        if(Color.green(color_two) > max)
+            max = Color.green(color_two);
+
+        int threshold_red = threshold * Color.red(color_two) / max;
+        int threshold_green = threshold * Color.green(color_two) / max;
+        int threshold_blue = threshold * Color.blue(color_two) / max;
+
+        //Test des seuils
+        boolean red = Color.red(color_two) - threshold_red <= Color.red(color_one) && Color.red(color_two) + threshold_red >= Color.red(color_one);
+        boolean blue = Color.blue(color_two) - threshold_blue <= Color.blue(color_one) && Color.blue(color_two) + threshold_blue >= Color.blue(color_one);
+        boolean green = Color.green(color_two) - threshold_green <= Color.green(color_one) && Color.green(color_two) + threshold_green >= Color.green(color_one);
+
+        return (red && green && blue);
     }
 }

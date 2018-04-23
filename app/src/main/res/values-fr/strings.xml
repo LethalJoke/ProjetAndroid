@@ -30,5 +30,6 @@
     <string name="projet_image_android">Projet Image Android</string>
     <string name="ghislain_lartigue_et_adrien_pedeau">Ghislain LARTIGUE et Adrien PEDEAU</string>
     <string name="filtre_cartoon">Filtre Cartoon</string>
+    <string name="Tint">Sélection de teinte</string>
 
 </resources>

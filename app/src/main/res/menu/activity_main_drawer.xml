@@ -35,6 +35,9 @@
                 android:id="@+id/sepia"
                 android:title="@string/teinte_sepia" />
             <item
+                android:id="@+id/tint"
+                android:title="@string/Tint" />
+            <item
                 android:id="@+id/histo"
                 android:title="@string/egalisation_de_l_histogramme" />
             <item

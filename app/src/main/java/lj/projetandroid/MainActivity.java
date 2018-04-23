@@ -7,10 +7,12 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.ColorInt;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,11 +22,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
+import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
+import com.pes.androidmaterialcolorpickerdialog.ColorPickerCallback;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,6 +44,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private ColorPicker cp;
     private static final int MY_PERMISSIONS_REQUEST_READ_STORAGE = 0;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_STORAGE = 1;
     private static final int MY_PERMISSIONS_REQUEST_CAMERA_ACCESS = 2;
@@ -334,6 +341,8 @@ public class MainActivity extends AppCompatActivity
         {
             cameraAcces = true;
         }
+
+        cp = new ColorPicker(this);
     }
 
     /**
@@ -416,12 +425,26 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.contra) {
             seekBarMode = 2;
         } else if (id == R.id.gris) {
-            currentOne = BitmapModifier.changeTint(currentOne, 0);
+            currentOne = BitmapModifier.changeTint(currentOne, 0, null);
             refreshView();
         }
         else if(id == R.id.sepia){
-            currentOne = BitmapModifier.changeTint(currentOne, 1);
+            currentOne = BitmapModifier.changeTint(currentOne, 1, null);
             refreshView();
+        }
+        else if(id == R.id.tint){
+            /* Show color picker dialog */
+            cp.show();
+            cp.setCallback(new ColorPickerCallback() {
+                @Override
+                public void onColorChosen(@ColorInt int color) {
+
+                    currentOne = BitmapModifier.changeTint(currentOne,0, color);
+                    refreshView();
+                    cp.dismiss();
+                }
+            });
+            //refreshView();
         }
         else if(id == R.id.histo)
         {
